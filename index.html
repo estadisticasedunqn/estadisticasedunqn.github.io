@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html>
+  <head>    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
+    <link rel="stylesheet" href="https://unpkg.com/ol-popup@4.0.0/src/ol-popup.css">
+    <link rel="stylesheet" href="https://unpkg.com/ol-geocoder@4.1.0/dist/ol-geocoder.min.css">  
+    <style type="text/css">
+      body {
+        font: 1em/1.5 BlinkMacSystemFont,-apple-system,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue","Helvetica","Arial",sans-serif;
+        color: #222;
+        font-weight: 400;
+      }
+      #map {
+        margin: 0px 5px;
+        
+        z-index: 1;
+        
+        height: 350px;
+      }
+      img {
+    max-width: 100%;
+}
+
+    img.olTileImage {
+        max-width: none;
+    }
+    .ol-geocoder .gcd-txt-input{
+      position:absolute;
+      z-index:99;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      padding:5px 30px 5px 40px;
+      border:none;
+      text-indent:6px;
+      background-color:transparent;
+      font-family:inherit;
+      font-size:.875em
+    }
+
+    @media (max-width: 500px) { 
+      .ol-geocoder.gcd-txt-container {
+    position: absolute;
+    width: 100% !important;
+    height: 2.375em;
+    top: .5em;
+    left: 0px;
+    box-sizing: border-box;
+    }
+    /* la clase .ol-zoom deberia de colocar los botones abajo, pero no respeta el !important*/
+    .ol-zoom {
+    bottom: .5em !important;
+    left: .5em !important;
+    top:auto !important;
+    }
+    .ol-popup-content h3{
+    font-size: 12px !important;
+    }
+    .ol-popup-content h4{
+    font-size: 10px !important;
+    }
+    .ol-popup-content h5{
+    font-size: 6px !important;
+    }
+  }
+   
+    </style>
+  </head>
+  <body>
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-two-thirds">
+                    <div id="map" tabindex="0"></div>
+             </div>
+             <div class="column is-one-third">
+                <div class="card">
+                    <header class="card-header">
+                      <p class="card-header-title has-text-info">
+                        Mi ubicación
+                      </p>                     
+                    </header>
+                    <div class="card-content">
+                      <div class="content">
+                        <p class="has-text-weight-medium" id="mi_direccion"></p>    
+                      </div>
+                    </div>                    
+                  </div>                
+                  <div class="card mt-4" >
+                    <header class="card-header">
+                      <p class="card-header-title has-text-info">
+                        Escuelas por radio escolar
+                      </p>                     
+                    </header>
+                    <div class="card-content">
+                      <div class="content">
+                        <p class="has-text-weight-medium" id="mi_escuela"></p>    
+                      </div>
+                    </div>                    
+                  </div> 
+         </div>
+            </div>
+         
+        </div>
+      </section>
+
+   
+      
+      <br>
+      <br>
+      
+    </div> 
+    
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/build/ol.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.4.4/proj4.js"></script>
+    <script src="https://unpkg.com/ol-popup@4.0.0/dist/ol-popup.js"></script>
+    <script src="https://unpkg.com/ol-geocoder@4.1.0/dist/ol-geocoder.js"></script>    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <script src="./control-nominatim.js"></script>
+
+  </body>
+</html>
