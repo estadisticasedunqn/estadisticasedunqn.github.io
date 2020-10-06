@@ -265,6 +265,7 @@ map.on('singleclick', function (evt) {
 geocoder.on('addresschosen', function(evt) {  
 
   window.setTimeout(function() {
+    
     popup.show(evt.coordinate, evt.address.formatted);
     let feature = getFeature(map.getPixelFromCoordinate(evt.coordinate))
      if (feature) $('#mi_escuela').html(`${feature.get('ESTABLECIM')}`);
@@ -274,17 +275,15 @@ geocoder.on('addresschosen', function(evt) {
     // console.log(evt.address.formatted)
     // console.log(ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326'))  
     // console.log(ol.proj.fromLonLat(ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326')))
-
-    
-    
     
     $('#mi_direccion').html(`${evt.address.details.name}`);
+    map.getView().setZoom(20);
   }, 2000);
 });
 
 function simpleReverseGeocoding(lon, lat) {
 
-   fetch('https://dev.virtualearth.net/REST/v1/Locations/'+lat+','+lon+'?includeNeighborhood=0&key=AuB_TgCn4vLZq_rFH8btGAYIZiigOwKplCqBqSuG7Shjew1oUPzyeoENK_oEsaKf').then(function(response) {
+   fetch('https://dev.virtualearth.net/REST/v1/Locations/'+lat+','+lon+'?includeEntityTypes=address&key=AuB_TgCn4vLZq_rFH8btGAYIZiigOwKplCqBqSuG7Shjew1oUPzyeoENK_oEsaKf').then(function(response) {
 
     return response.json();
   }).then(function(json) {   
