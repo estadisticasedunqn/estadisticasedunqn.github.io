@@ -1,5 +1,7 @@
 (function(win, doc) {
 
+  
+
   var olview = new ol.View({
   
     projection: 'EPSG:3857',
@@ -65,16 +67,18 @@ map.addControl(geocoder);
 map.addOverlay(popup);
 
 
+
+/***** Codigo para obtener la localizacion por gps******/
  /* Obtenemos la localizacion actual en caso de existir */
- if (navigator.geolocation) {
+ /* if (navigator.geolocation) {
   // console.log("El navegador si acepta geolocalización")
    obtener_posicion_actual();
  }
  else {
    // console.log("El navegador no acepta geolocalización")
- }
+ } */
 
- function obtener_posicion_actual() {
+ /* function obtener_posicion_actual() {
   
    var options = {
      enableHighAccuracy: true,
@@ -99,12 +103,14 @@ map.addOverlay(popup);
      geometry: new ol.geom.Point(ol.proj.fromLonLat([longitud,latitud])),
      name: 'Ubicacion'
      
-   });
+   }); */
+
+
    
 
-   var iconStyle = new ol.style.Style({
-     image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
-       anchor: [0.5, 46],
+  // var iconStyle = new ol.style.Style({
+   //  image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+     /*   anchor: [0.5, 46],
        anchorXUnits: 'fraction',
        anchorYUnits: 'pixels',
        src: 'assets/home.ico',
@@ -132,8 +138,8 @@ map.addOverlay(popup);
    // Analizar el error que se envió desde el API
    // console.log(error);
    
- }
- /* Fin ubicacion actual */
+ } */
+/***** Fin Codigo para obtener la localizacion por gps******/
 
 
 var vectorSource = new ol.source.Vector({
@@ -254,6 +260,7 @@ map.on('singleclick', function (evt) {
      // content += '<h5>' + coordTransform + '</h5>';
       simpleReverseGeocoding(coordTransform[0],coordTransform[1])
       $('#mi_escuela').html(`${feature.get('ESTABLECIM')}`);
+      console.log(evt.coordinate)
       popup.show(evt.coordinate, content);
       
   }
@@ -303,6 +310,55 @@ function getFeature(pixel){
 
     return feature
 }
+
+
+var getUrlParameter = function getUrlParameter(sParam) {
+  const url = window.location;
+  const urlObject = new URL(url);
+  const param = urlObject.searchParams.get(sParam)
+  return param 
+};
+
+/* Seteo de ubicacion en mapa segun direccion provista por el usuario*/
+function marcarDireccionInicial(){
+  //1- obtenemos los datos enviados en la url
+  var localidadReferencia = getUrlParameter('localidad');
+  var direccionReferencia = getUrlParameter('direccion');
+
+  //2. utilizamos georeverse para determinar la latitud y longitud de la localizacion dada
+  const urlQuery = new URL("https://dev.virtualearth.net/REST/v1/Locations");
+  urlQuery.searchParams.append("countryRegion", "Argentina");
+  urlQuery.searchParams.append("adminDistrict", "Neuquen");
+  urlQuery.searchParams.append("locality", localidadReferencia);
+  urlQuery.searchParams.append("addressLine", direccionReferencia);
+  urlQuery.searchParams.append("Key", "AuB_TgCn4vLZq_rFH8btGAYIZiigOwKplCqBqSuG7Shjew1oUPzyeoENK_oEsaKf");
+  urlQuery.searchParams.append("includeNeighborhood", 0);
+  urlQuery.searchParams.append("maxResults", 1);
+  urlQuery.searchParams.append("o", "json");  
+
+  //3. ejecutamos la consulta
+
+  fetch(urlQuery.href).then(function(response) {
+    return response.json();
+  }).then(function(json) {   
+    if(json.statusCode==200 && json.resourceSets.length==1 ){
+      localizacionRetorno = json.resourceSets[0]
+      coordenadasRetorno = localizacionRetorno.resources[0].point.coordinates
+      console.log([coordenadasRetorno[1],coordenadasRetorno[0]])
+      popup.show( [coordenadasRetorno[1],coordenadasRetorno[0]], '<h4>Mi ubicación</h4>');
+     // console.log(json.resourceSets[0])
+    }else{
+      //mostrar leyenda de que la direccion no ha podido ser referenciada
+    }
+  
+  }) 
+  
+  
+}
+
+  
+ marcarDireccionInicial() 
+
 
 })(window, document);
 
