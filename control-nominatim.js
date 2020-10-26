@@ -1,6 +1,15 @@
 (function(win, doc) {
 
-  
+  //coordenadasUbicacion y puntoUbicacion seran las variables utilizadas para indicar 
+  // la ubicacion(en punto y coordenada) seteada por el usuario
+  var coordenadasUbicacion=null
+  var puntoUbicacion=null
+
+    
+  $('#confirmacionUbicacion').click(function() {
+    confirmarUbicacion()
+    
+  });
 
   var olview = new ol.View({
   
@@ -63,7 +72,7 @@ var geocoder = new Geocoder('nominatim', {
   
 });
 
-map.addControl(geocoder);
+//map.addControl(geocoder);
 map.addOverlay(popup);
 
 
@@ -237,17 +246,11 @@ var vectorLayer = new ol.layer.Vector({
 map.addLayer(vectorLayer);
 
 
-map.on('singleclick', function (evt) {
+map.on('singleclick', function (evt) {  
+   let coordenadas = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326')
+   marcarPunto(evt.coordinate,coordenadas)   
 
-  //coordenadas = ol.proj.transform(evt.coordinate, 'EPSG:4326', 'EPSG:3587'),
-  //// console.log(coordenadas)
-  //popup.show();
-        
-   //// console.log('By Click:')
-   //// console.log(ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326'))
-   //popup.show(evt.coordinate, ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326'));
-      
-  let feature = getFeature(evt.pixel)
+  /* let feature = getFeature(evt.pixel)
    
   if (feature) {
       
@@ -258,19 +261,19 @@ map.on('singleclick', function (evt) {
     //  var content = '<h3>' + feature.get('ESTABLECIM') + '</h3>';
      var content = '<h4>' + feature.get('ETIQUETA') + '</h4>';
      // content += '<h5>' + coordTransform + '</h5>';
-      simpleReverseGeocoding(coordTransform[0],coordTransform[1])
-      $('#mi_escuela').html(`${feature.get('ESTABLECIM')}`);
-      console.log(evt.coordinate)
+   //   simpleReverseGeocoding(coordTransform[0],coordTransform[1])
+   //   $('#mi_escuela').html(`${feature.get('ESTABLECIM')}`);
+      
       popup.show(evt.coordinate, content);
       
-  }
+  } */
 
    
 });
 
 //Listen when an address is chosen
 geocoder.on('addresschosen', function(evt) {  
-
+  console.log(evt)
   window.setTimeout(function() {
     
     popup.show(evt.coordinate, evt.address.formatted);
@@ -324,6 +327,7 @@ function marcarDireccionInicial(){
   //1- obtenemos los datos enviados en la url
   var localidadReferencia = getUrlParameter('localidad');
   var direccionReferencia = getUrlParameter('direccion');
+  $('#mi_direccion').html(`${direccionReferencia}, ${localidadReferencia}`);
 
   //2. utilizamos georeverse para determinar la latitud y longitud de la localizacion dada
   const urlQuery = new URL("https://dev.virtualearth.net/REST/v1/Locations");
@@ -338,24 +342,50 @@ function marcarDireccionInicial(){
 
   //3. ejecutamos la consulta
 
-  fetch(urlQuery.href).then(function(response) {
+  /* fetch(urlQuery.href).then(function(response) {
     return response.json();
   }).then(function(json) {   
     if(json.statusCode==200 && json.resourceSets.length==1 ){
       localizacionRetorno = json.resourceSets[0]
       coordenadasRetorno = localizacionRetorno.resources[0].point.coordinates
+      console.log(localizacionRetorno)
       console.log([coordenadasRetorno[1],coordenadasRetorno[0]])
-      popup.show( [coordenadasRetorno[1],coordenadasRetorno[0]], '<h4>Mi ubicación</h4>');
+      popup.show( coordenadasRetorno, '<h4>Mi ubicación</h4>');
      // console.log(json.resourceSets[0])
     }else{
       //mostrar leyenda de que la direccion no ha podido ser referenciada
     }
   
-  }) 
+  })  */
   
+  
+  var point = ol.proj.fromLonLat([-68.10619,-38.94602 ])
+  window.setTimeout(function() {
+    marcarPunto(point,[-68.10619,-38.94602 ])
+  map.getView().setCenter(ol.proj.transform([-68.10619,-38.94602 ], 'EPSG:4326','EPSG:3857'));
+  map.getView().setZoom(19);
+  ;},2000)
+}
+
+function marcarPunto(point,coordenadas){
+  coordenadasUbicacion = coordenadas 
+  puntoUbicacion =   point
+  popup.show( point, '<h1> <img src="assets/home.ico" style="height:25px"> <b> Mi domicilio</b></h1>');
+}
+
+function  confirmarUbicacion(){
+  if(coordenadasUbicacion!==null){
+    let feature = getFeature(map.getPixelFromCoordinate(puntoUbicacion))
+    if (feature) console.log(generarInformacionRetorno(feature)) 
+  }else{
+    alert('Debe indicar/marcar en el mapa el punto donde se encuentra ubicado su domicilio')
+  }
   
 }
 
+function generarInformacionRetorno(feature){
+  return {"Coordenadas":{"Latitud":coordenadasUbicacion[0],"Longitud":coordenadasUbicacion[1]}, "Radios": [{"CueAnexo":"xxx","Nombre":feature.get('ESTABLECIM'),"Nivel":"Secundario-tecnio"}]}
+}
   
  marcarDireccionInicial() 
 
