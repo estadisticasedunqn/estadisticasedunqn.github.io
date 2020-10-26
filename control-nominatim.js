@@ -327,6 +327,12 @@ function marcarDireccionInicial(){
   //1- obtenemos los datos enviados en la url
   var localidadReferencia = getUrlParameter('localidad');
   var direccionReferencia = getUrlParameter('direccion');
+
+  if (direccionReferencia===null){
+    $('#mi_direccion').html(`Información no suministrada`);
+    return
+  }
+
   $('#mi_direccion').html(`${direccionReferencia}, ${localidadReferencia}`);
 
   //2. utilizamos georeverse para determinar la latitud y longitud de la localizacion dada
@@ -342,29 +348,26 @@ function marcarDireccionInicial(){
 
   //3. ejecutamos la consulta
 
-  /* fetch(urlQuery.href).then(function(response) {
+  fetch(urlQuery.href).then(function(response) {
     return response.json();
   }).then(function(json) {   
     if(json.statusCode==200 && json.resourceSets.length==1 ){
       localizacionRetorno = json.resourceSets[0]
       coordenadasRetorno = localizacionRetorno.resources[0].point.coordinates
-      console.log(localizacionRetorno)
-      console.log([coordenadasRetorno[1],coordenadasRetorno[0]])
-      popup.show( coordenadasRetorno, '<h4>Mi ubicación</h4>');
-     // console.log(json.resourceSets[0])
+      coordenadasLonLat=[coordenadasRetorno[1],coordenadasRetorno[0]]
+      var point = ol.proj.fromLonLat(coordenadasLonLat)
+      marcarPunto(point,coordenadasLonLat)
+     map.getView().setCenter(ol.proj.transform(coordenadasLonLat, 'EPSG:4326','EPSG:3857'));
+      map.getView().setZoom(19);   
     }else{
       //mostrar leyenda de que la direccion no ha podido ser referenciada
     }
   
-  })  */
+  })
   
   
-  var point = ol.proj.fromLonLat([-68.10619,-38.94602 ])
-  window.setTimeout(function() {
-    marcarPunto(point,[-68.10619,-38.94602 ])
-  map.getView().setCenter(ol.proj.transform([-68.10619,-38.94602 ], 'EPSG:4326','EPSG:3857'));
-  map.getView().setZoom(19);
-  ;},2000)
+  
+  
 }
 
 function marcarPunto(point,coordenadas){
