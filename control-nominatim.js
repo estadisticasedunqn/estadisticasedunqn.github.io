@@ -379,15 +379,18 @@ function marcarPunto(point,coordenadas){
 function  confirmarUbicacion(){
   if(coordenadasUbicacion!==null){
     let feature = getFeature(map.getPixelFromCoordinate(puntoUbicacion))
-    if (feature) console.log(generarInformacionRetorno(feature)) 
+    if (feature){
+      console.log('asd')
+      $('#json').html(JSON.stringify(generarInformacionRetorno(feature)));
+    }
   }else{
     alert('Debe indicar/marcar en el mapa el punto donde se encuentra ubicado su domicilio')
   }
   
 }
 
-function generarInformacionRetorno(feature){
-  return {"Coordenadas":{"Latitud":coordenadasUbicacion[0],"Longitud":coordenadasUbicacion[1]}, "Radios": [{"CueAnexo":"xxx","Nombre":feature.get('ESTABLECIM'),"Nivel":"Secundario-tecnio"}]}
+function generarInformacionRetorno(feature){  
+  return {"Coordenadas":{"Latitud":coordenadasUbicacion[0],"Longitud":coordenadasUbicacion[1]}, "Radios": [{"CueAnexo":"xxxxxxxxx","Nombre":feature.get('ESTABLECIM'),"Nivel":"secundario-tecnica"}]}
 }
   
  marcarDireccionInicial() 
