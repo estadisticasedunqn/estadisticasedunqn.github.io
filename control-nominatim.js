@@ -4,7 +4,8 @@
   // la ubicacion(en punto y coordenada) seteada por el usuario
   var coordenadasUbicacion=null
   var puntoUbicacion=null
-
+  var registranteId = null
+var tipoRadio = null
     
   $('#confirmacionUbicacion').click(function() {
     confirmarUbicacion()
@@ -291,7 +292,7 @@ geocoder.on('addresschosen', function(evt) {
   }, 2000);
 });
 
-function simpleReverseGeocoding(lon, lat) {
+/* function simpleReverseGeocoding(lon, lat) {
 
    fetch('https://dev.virtualearth.net/REST/v1/Locations/'+lat+','+lon+'?includeEntityTypes=address&key=AuB_TgCn4vLZq_rFH8btGAYIZiigOwKplCqBqSuG7Shjew1oUPzyeoENK_oEsaKf').then(function(response) {
 
@@ -300,7 +301,7 @@ function simpleReverseGeocoding(lon, lat) {
    $('#mi_direccion').html(`${json.resourceSets[0].resources[0].address.addressLine||''}, ${json.resourceSets[0].resources[0].address.adminDistrict2||''}, ${json.resourceSets[0].resources[0].address.adminDistrict||''}`);   
   }) 
  
-}
+} */
 
 
 function getFeature(pixel){
@@ -327,18 +328,28 @@ function marcarDireccionInicial(){
   //1- obtenemos los datos enviados en la url
   var localidadReferencia = getUrlParameter('localidad');
   var direccionReferencia = getUrlParameter('direccion');
+   tipoRadio = getUrlParameter('tipoRadio');  // D -> 'Domicilio' -- T -> 'Trabajo'
+  registranteId = getUrlParameter('registranteId');
 
   if (direccionReferencia===null){
     $('#mi_direccion').html(`Información no suministrada`);
     return
   }
 
+  if(tipoRadio=='D'){
+    $('#tipoDireccion').html('de domicilio');
+  }else{
+    $('#tipoDireccion').html('laboral');
+    $('#tipoDireccionTitulo').html('laboral');
+  }
+  
+  
   $('#mi_direccion').html(`${direccionReferencia}, ${localidadReferencia}`);
 
   //2. utilizamos georeverse para determinar la latitud y longitud de la localizacion dada
   const urlQuery = new URL("https://dev.virtualearth.net/REST/v1/Locations");
   urlQuery.searchParams.append("countryRegion", "Argentina");
-  urlQuery.searchParams.append("adminDistrict", "Neuquen");
+  urlQuery.searchParams.append("adminDistrict", "Neuquén");
   urlQuery.searchParams.append("locality", localidadReferencia);
   urlQuery.searchParams.append("addressLine", direccionReferencia);
   urlQuery.searchParams.append("Key", "AuB_TgCn4vLZq_rFH8btGAYIZiigOwKplCqBqSuG7Shjew1oUPzyeoENK_oEsaKf");
@@ -350,24 +361,39 @@ function marcarDireccionInicial(){
 
   fetch(urlQuery.href).then(function(response) {
     return response.json();
-  }).then(function(json) {   
+  }).then(function(json) { 
+    console.log(json)  
     if(json.statusCode==200 && json.resourceSets.length==1 ){
-      localizacionRetorno = json.resourceSets[0]
-      coordenadasRetorno = localizacionRetorno.resources[0].point.coordinates
-      coordenadasLonLat=[coordenadasRetorno[1],coordenadasRetorno[0]]
-      var point = ol.proj.fromLonLat(coordenadasLonLat)
-      marcarPunto(point,coordenadasLonLat)
-     map.getView().setCenter(ol.proj.transform(coordenadasLonLat, 'EPSG:4326','EPSG:3857'));
-      map.getView().setZoom(19);   
+      localizacionRetorno = json.resourceSets[0]      
+      if(localizacionRetorno.resources[0].address.adminDistrict=='Neuquén'){
+        coordenadasRetorno = localizacionRetorno.resources[0].point.coordinates
+        coordenadasLonLat=[coordenadasRetorno[1],coordenadasRetorno[0]]
+        var point = ol.proj.fromLonLat(coordenadasLonLat)
+        marcarPunto(point,coordenadasLonLat)
+        map.getView().setCenter(ol.proj.transform(coordenadasLonLat, 'EPSG:4326','EPSG:3857'));
+        map.getView().setZoom(19);   
+        direccionNoReferenciada(false)
+      }else{
+        // la dirección indicada no ha podido ser referenciada
+        direccionNoReferenciada(true)
+      }
+      
     }else{
       //mostrar leyenda de que la direccion no ha podido ser referenciada
+      direccionNoReferenciada(true)
     }
   
   })
   
-  
-  
-  
+}
+
+function direccionNoReferenciada(flag){
+  if(flag){
+    $('#informacionNoReferenciada').show()
+  }else{    
+    $('#informacionNoReferenciada').hide()
+  }
+ 
 }
 
 function marcarPunto(point,coordenadas){
@@ -379,8 +405,7 @@ function marcarPunto(point,coordenadas){
 function  confirmarUbicacion(){
   if(coordenadasUbicacion!==null){
     let feature = getFeature(map.getPixelFromCoordinate(puntoUbicacion))
-    if (feature){
-      console.log('asd')
+    if (feature){     
       $('#json').html(JSON.stringify(generarInformacionRetorno(feature)));
     }
   }else{
@@ -389,8 +414,43 @@ function  confirmarUbicacion(){
   
 }
 
-function generarInformacionRetorno(feature){  
-  return {"Coordenadas":{"Latitud":coordenadasUbicacion[0],"Longitud":coordenadasUbicacion[1]}, "Radios": [{"CueAnexo":"xxxxxxxxx","Nombre":feature.get('ESTABLECIM'),"Nivel":"secundario-tecnica"}]}
+function generarInformacionRetorno(feature){ 
+  let xmlhttp = new XMLHttpRequest();
+
+  // generamos el objeto con los datos de radios y las coordenadas de la ubicación a enviar
+  let informacionDireccionRadios = {"Coordenadas":{"Latitud":coordenadasUbicacion[0],"Longitud":coordenadasUbicacion[1],"Radios":[{"CUE":"CUEXXXX","Nombre":feature.get('ESTABLECIM'),"Nivel":"ST","TipoRadio":tipoRadio,},]}}
+
+  let sr =`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cer="CertiRegu">
+  <soapenv:Header/>
+  <soapenv:Body>
+     <cer:WSRadiosAlumnos.Execute>
+        <cer:Registranteid>${registranteId}</cer:Registranteid>
+        <cer:Varcharjson>${JSON.stringify(informacionDireccionRadios)}</cer:Varcharjson>
+     </cer:WSRadiosAlumnos.Execute>
+  </soapenv:Body>
+</soapenv:Envelope>`; 
+
+ // ocultamos el mensaje de operación exitosa y activamos el loading
+$('#confirmarUbicacionMensaje').hide()          
+$('#confirmacionUbicacion').addClass( "is-loading" )
+
+xmlhttp.open('POST', 'https://regular.neuquen.gob.ar/Inscripciones/servlet/com.certiregu.awsradiosalumnos', true); 
+
+
+
+xmlhttp.onreadystatechange = function () {
+  if (xmlhttp.readyState == 4) {
+      if (xmlhttp.status == 200) {
+        // mostramos el mensaje de operación exitosa y desactivamos el loading
+        $('#confirmarUbicacionMensaje').show()          
+        $('#confirmacionUbicacion').removeClass( "is-loading" )
+      }
+  }
+}
+// Send the POST request
+xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+xmlhttp.send(sr);
+  
 }
   
  marcarDireccionInicial() 

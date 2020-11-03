@@ -73,16 +73,23 @@
   <body>
     <section class="section">
         <div class="container">
-          <h5 class="subtitle is-5">A continuación le solicitaremos que indique/marque en el mapa el punto donde se encuentra ubicado su domicilio</h5>
+          <h5 class="subtitle is-5">A continuación le solicitaremos que indique/marque en el mapa el punto donde se encuentra ubicado su domicilio &nbsp;<span id="tipoDireccionTitulo"></span>.</h5>
+          <h6 class="subtitle is-6"></span>Luego confirme su ubicación.</h6>
+                
+        
             <div class="columns">
                 <div class="column is-two-thirds">
+                  <div class="notification is-warning is-light" id="informacionNoReferenciada">                   
+                    La dirección indicada no ha podido ser ubicada en el mapa
+                  </div>
+
                     <div id="map" tabindex="0"></div>
              </div>
              <div class="column is-one-third">
                 <div class="card">
                     <header class="card-header">
                       <p class="card-header-title has-text-info">
-                        Dirección indicada
+                        Dirección &nbsp; <span id="tipoDireccion"></span> &nbsp;indicada
                       </p>                     
                     </header>
                     <div class="card-content">
@@ -94,7 +101,10 @@
                   <div class="card" >                   
                     <div class="card-content">
                       <div class="content" style="text-align: center;">
-                        <button id="confirmacionUbicacion"class="button is-link is-outlined">Confirmar Ubicación en Mapa</button>  
+                        <button id="confirmacionUbicacion" class="button is-link is-outlined">Confirmar Ubicación en Mapa</button>  
+                      </div>
+                      <div class="notification is-success" id="confirmarUbicacionMensaje" style="display: none;">
+                       La ubicación ha sido confirmada!
                       </div>
                     </div>                    
                   </div> 
