@@ -72,18 +72,18 @@
   </head>
   <body>
     <section class="section">
-        <div class="container">
-          <h5 class="subtitle is-5">A continuación le solicitaremos que indique/marque en el mapa el punto donde se encuentra ubicado su domicilio &nbsp;<span id="tipoDireccionTitulo"></span>.</h5>
-          <h6 class="subtitle is-6"></span>Luego confirme su ubicación.</h6>
-                
-        
+        <div class="container">        
             <div class="columns">
                 <div class="column is-two-thirds">
-                  <div class="notification is-warning is-light" id="informacionNoReferenciada">                   
-                    La dirección indicada no ha podido ser ubicada en el mapa
+                  <div class="notification is-info is-light" >                   
+                    <span id="informacionNoReferenciada"><b>La dirección indicada no ha podido ser ubicada en el mapa.</b></span> A continuación le solicitaremos que indique/marque en el mapa el punto donde se encuentra ubicado su domicilio &nbsp;<span id="tipoDireccionTitulo"></span>.
+                    Luego confirme su ubicación.
                   </div>
-
-                    <div id="map" tabindex="0"></div>
+                  <div class="card">
+                    <div class="card-content">
+                      <div id="map" tabindex="0"></div>
+                    </div>
+                  </div>
              </div>
              <div class="column is-one-third">
                 <div class="card">
@@ -105,6 +105,9 @@
                       </div>
                       <div class="notification is-success" id="confirmarUbicacionMensaje" style="display: none;">
                        La ubicación ha sido confirmada!
+                      </div>
+                      <div class="notification is-danger is-light" id="confirmarUbicacionMensajeError" style="display: none;">
+                        La ubicación no ha podido ser confirmada!                        
                       </div>
                     </div>                    
                   </div> 

@@ -431,18 +431,22 @@ function generarInformacionRetorno(feature){
 </soapenv:Envelope>`; 
 
  // ocultamos el mensaje de operación exitosa y activamos el loading
-$('#confirmarUbicacionMensaje').hide()          
+$('#confirmarUbicacionMensaje').hide()    
+$('#confirmarUbicacionMensajeError').hide()       
 $('#confirmacionUbicacion').addClass( "is-loading" )
 
-xmlhttp.open('POST', 'https://regular.neuquen.gob.ar/Inscripciones/servlet/com.certiregu.awsradiosalumnos', true); 
+xmlhttp.open('POST', 'https://regular.neuquen.gob.ar/Inscripciones/servlet/com.certiregu.awsradiosalumnos'); 
 
 
 
-xmlhttp.onreadystatechange = function () {
+xmlhttp.onreadystatechange = function () {  
   if (xmlhttp.readyState == 4) {
       if (xmlhttp.status == 200) {
         // mostramos el mensaje de operación exitosa y desactivamos el loading
         $('#confirmarUbicacionMensaje').show()          
+        $('#confirmacionUbicacion').removeClass( "is-loading" )
+      }else{
+        $('#confirmarUbicacionMensajeError').show()          
         $('#confirmacionUbicacion').removeClass( "is-loading" )
       }
   }
