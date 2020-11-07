@@ -1,40 +1,40 @@
 (function(win, doc) {
 
+  //***** VARIABLES GLOBALES*/
   //coordenadasUbicacion y puntoUbicacion seran las variables utilizadas para indicar 
   // la ubicacion(en punto y coordenada) seteada por el usuario
+  var modoVisualizacion=1 // 1-Modo establecimientos /2- modo radios escolares
   var coordenadasUbicacion=null
   var puntoUbicacion=null
   var registranteId = null
-var tipoRadio = null
+  var tipoRadio = null
+
+  //***** FIN VARIABLES GLOBALES*/
     
+  //***** FUNCIONALIDAD BOTONES*/
   $('#confirmacionUbicacion').click(function() {
     confirmarUbicacion()
     
   });
 
+  $( "#selectNiveles" ).change(function(event) {    
+    filtrarMapaEstablecimientos(event.target.value)
+  });
+
+  //***** FIN FUNCIONALIDAD BOTONES*/
+
+
+  //***** MAPA*/
+
   var olview = new ol.View({
   
     projection: 'EPSG:3857',
-    center: ol.proj.transform([-68.10752,-38.94265], 'EPSG:4326','EPSG:3857'),
+    center: ol.proj.transform([-69.652898,-38.684755], 'EPSG:4326','EPSG:3857'),
   
-    extent: ol.proj.transformExtent([ -68.43040,-38.84773,-67.78496,-39.03732], 'EPSG:4326','EPSG:3857'),
-    zoom: 12.5,
+   // extent: ol.proj.transformExtent([ -68.43040,-38.84773,-67.78496,-39.03732], 'EPSG:4326','EPSG:3857'),
+    zoom: 7,
     minZoom: 2,
     maxZoom: 20,
-  }),
-  
-  //Establecimientos Educativos    
-   wmsSource = new ol.source.ImageWMS({
-    url: 'http://geoeducacion.neuquen.gov.ar/proxy/http://geoeducacion.neuquen.gov.ar/geoserver/establecimientos_edu/wms',
-    params: {'LAYERS': 'establecimientos_edu:com_sec_tec_y_agrop',
-             'STYLES': 'establecimientos_edu:com_sec_tec_y_agrop_etiqueta'
-             },
-    serverType: 'geoserver',
-    crossOrigin: 'anonymous'
-  }),
-
-   wmsLayer = new ol.layer.Image({
-    source: wmsSource
   }),
   
 
@@ -56,12 +56,12 @@ var tipoRadio = null
   map = new ol.Map({
     target: doc.getElementById('map'),
     view: olview,
-    layers: [baseLayer, wmsLayer],
+    layers: [baseLayer /**, wmsLayer */],
   }),
   popup = new ol.Overlay.Popup();
 
 //Instantiate with some options and add the Control
-var geocoder = new Geocoder('nominatim', {
+/* var geocoder = new Geocoder('nominatim', {
   provider: 'bing',
   key:'AuB_TgCn4vLZq_rFH8btGAYIZiigOwKplCqBqSuG7Shjew1oUPzyeoENK_oEsaKf',
   targetType: 'text-input',    
@@ -71,93 +71,11 @@ var geocoder = new Geocoder('nominatim', {
   limit: 15,
   keepOpen: false
   
-});
+}); */
 
 //map.addControl(geocoder);
 map.addOverlay(popup);
 
-
-
-/***** Codigo para obtener la localizacion por gps******/
- /* Obtenemos la localizacion actual en caso de existir */
- /* if (navigator.geolocation) {
-  // console.log("El navegador si acepta geolocalización")
-   obtener_posicion_actual();
- }
- else {
-   // console.log("El navegador no acepta geolocalización")
- } */
-
- /* function obtener_posicion_actual() {
-  
-   var options = {
-     enableHighAccuracy: true,
-     timeout: 5000,
-     maximumAge: 0
-   };
-    navigator.geolocation.getCurrentPosition(procesar_posicion, procesar_error, options);
-
- }
-
-
- function procesar_posicion(posicion) {
-   var latitud = posicion.coords.latitude;
-   var longitud = posicion.coords.longitude;
-   var precision = posicion.coords.accuracy;
-   
-   // console.log("Latitud: " + latitud)
-   // console.log("Longitud: " + longitud)
-   // console.log("Precisión: " + precision)
-
-   var iconFeature = new ol.Feature({
-     geometry: new ol.geom.Point(ol.proj.fromLonLat([longitud,latitud])),
-     name: 'Ubicacion'
-     
-   }); */
-
-
-   
-
-  // var iconStyle = new ol.style.Style({
-   //  image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
-     /*   anchor: [0.5, 46],
-       anchorXUnits: 'fraction',
-       anchorYUnits: 'pixels',
-       src: 'assets/home.ico',
-       scale: .10 
-     }))
-   });
-
-   iconFeature.setStyle(iconStyle);
-
-   var vectorSource = new ol.source.Vector({
-     features: [iconFeature]
-   });
-
-   var vectorLayer = new ol.layer.Vector({
-     source: vectorSource
-   });
-   
-   map.addLayer( vectorLayer);
-
-  
- }
-
- function procesar_error(error) {
-      
-   // Analizar el error que se envió desde el API
-   // console.log(error);
-   
- } */
-/***** Fin Codigo para obtener la localizacion por gps******/
-
-
-var vectorSource = new ol.source.Vector({
-});
-var vectorLayer = new ol.layer.Vector({
-    source: vectorSource
-});
-map.addLayer(vectorLayer);
 
 
 
@@ -190,90 +108,91 @@ countryStyle = new ol.style.Style({
 
 var style = [countryStyle, labelStyle];
 
-var vectorLayer = new ol.layer.Vector({
-  source: new ol.source.Vector({
-    /* url:'http://geoeducacion.neuquen.gov.ar/proxy/http://geoeducacion.neuquen.gov.ar/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&' +
-    'typename=establecimientos_edu:ra_nqn_tec&outputFormat=application/json&srsname=EPSG:3857&',
-    serverType: 'geoserver',
-    crossOrigin: 'anonymous', */
-    // If you want to use a static file, change the previous row to
-    url: 'data/radios_tecnica.json',
-    format: new ol.format.GeoJSON()
-  }),
-  style: function(feature) {
+  
+  
+function cargarCapaRadios(){
 
-    var geometry = feature.getGeometry();
-    if (geometry.getType() == 'MultiPolygon') {
-      // Only render label for the widest polygon of a multipolygon
-      var polygons = geometry.getPolygons();
-      var widest = 0;
-      for (var i = 0, ii = polygons.length; i < ii; ++i) {
-        var polygon = polygons[i];
-        var width = ol.extent.getWidth(polygon.getExtent());
-        if (width > widest) {
-          widest = width;
-          geometry = polygon;
+ 
+  var vectorLayer = new ol.layer.Vector({
+    source: new ol.source.Vector({    
+      url:'http://geoeducacion.neuquen.gov.ar/proxy/http://geoeducacion.neuquen.gov.ar/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&' +
+      'typename=establecimientos_edu:ra_nqn_tec&outputFormat=application/json&srsname=EPSG:3857&',
+      serverType: 'geoserver',
+      crossOrigin: 'anonymous', 
+      // If you want to use a static file, change the previous row to
+    //  url: 'data/radios_tecnica.json',
+      format: new ol.format.GeoJSON()
+    }),
+    style: function(feature) {
+  
+      var geometry = feature.getGeometry();
+      if (geometry.getType() == 'MultiPolygon') {
+        // Only render label for the widest polygon of a multipolygon
+        var polygons = geometry.getPolygons();
+        var widest = 0;
+        for (var i = 0, ii = polygons.length; i < ii; ++i) {
+          var polygon = polygons[i];
+          var width = ol.extent.getWidth(polygon.getExtent());
+          if (width > widest) {
+            widest = width;
+            geometry = polygon;
+          }
         }
       }
-    }
-    
-    // Check if default label position fits in the view and move it inside if necessary
-    geometry = geometry.getInteriorPoint();
-    var size = map.getSize();
-    var extent = map.getView().calculateExtent([size[0]-12,size[1]-12]);
-    var textAlign = 'center';
-    var coordinates = geometry.getCoordinates();
-    if (!geometry.intersectsExtent(extent)) {
-      geometry = new ol.geom.Point(ol.geom.Polygon.fromExtent(extent).getClosestPoint(coordinates));
-      // Align text if at either side
-      var x = geometry.getCoordinates()[0];
-      if (x > coordinates[0]) {
-        textAlign = 'left';
+      
+      // Check if default label position fits in the view and move it inside if necessary
+      geometry = geometry.getInteriorPoint();
+      var size = map.getSize();
+      var extent = map.getView().calculateExtent([size[0]-12,size[1]-12]);
+      var textAlign = 'center';
+      var coordinates = geometry.getCoordinates();
+      if (!geometry.intersectsExtent(extent)) {
+        geometry = new ol.geom.Point(ol.geom.Polygon.fromExtent(extent).getClosestPoint(coordinates));
+        // Align text if at either side
+        var x = geometry.getCoordinates()[0];
+        if (x > coordinates[0]) {
+          textAlign = 'left';
+        }
+        if (x < coordinates[0]) {
+          textAlign = 'right';
+        }
       }
-      if (x < coordinates[0]) {
-        textAlign = 'right';
-      }
-    }
+  
+      labelStyle.setGeometry(geometry);
+      labelStyle.getText().setText(feature.get('ESTABLECIM').replace(' ','\n'));
+      labelStyle.getText().setTextAlign(textAlign);
+      return style;
+    },
+    declutter: true,
+    renderBuffer: 1  // If left at default value labels will appear when countries not visible
+  });
+  
+  map.addLayer(vectorLayer); 
+}
 
-    labelStyle.setGeometry(geometry);
-    labelStyle.getText().setText(feature.get('ESTABLECIM').replace(' ','\n'));
-    labelStyle.getText().setTextAlign(textAlign);
-    return style;
-  },
-  declutter: true,
-  renderBuffer: 1  // If left at default value labels will appear when countries not visible
-});
 
-map.addLayer(vectorLayer);
+
 
 
 map.on('singleclick', function (evt) {  
-   let coordenadas = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326')
-   marcarPunto(evt.coordinate,coordenadas)   
 
-  /* let feature = getFeature(evt.pixel)
+  if(modoVisualizacion==2){
+    let coordenadas = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326')
+    marcarPunto(evt.coordinate,coordenadas)   
+  }
+  else{
+    let feature = getFeature(evt.pixel)
    
-  if (feature) {
-      
-      var geometry = feature.getGeometry();
-      var coord = geometry.getCoordinates();
-      // console.log(geometry)
-      let coordTransform = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326') 
-    //  var content = '<h3>' + feature.get('ESTABLECIM') + '</h3>';
-     var content = '<h4>' + feature.get('ETIQUETA') + '</h4>';
-     // content += '<h5>' + coordTransform + '</h5>';
-   //   simpleReverseGeocoding(coordTransform[0],coordTransform[1])
-   //   $('#mi_escuela').html(`${feature.get('ESTABLECIM')}`);
-      
+    if (feature) {
+      var content = `<p>${feature.values_.NOMBRE} </p><p>${feature.values_.MOD_OFERTA}</p>`;
       popup.show(evt.coordinate, content);
-      
-  } */
-
+    }
+  }
    
 });
 
 //Listen when an address is chosen
-geocoder.on('addresschosen', function(evt) {  
+/* geocoder.on('addresschosen', function(evt) {  
   console.log(evt)
   window.setTimeout(function() {
     
@@ -281,41 +200,25 @@ geocoder.on('addresschosen', function(evt) {
     let feature = getFeature(map.getPixelFromCoordinate(evt.coordinate))
      if (feature) $('#mi_escuela').html(`${feature.get('ESTABLECIM')}`);
 
-    // console.log('By Geocoder:')
-    // console.log(evt.coordinate)
-    // console.log(evt.address.formatted)
-    // console.log(ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326'))  
-    // console.log(ol.proj.fromLonLat(ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326')))
-    
     $('#mi_direccion').html(`${evt.address.details.name}`);
     map.getView().setZoom(20);
   }, 2000);
-});
-
-/* function simpleReverseGeocoding(lon, lat) {
-
-   fetch('https://dev.virtualearth.net/REST/v1/Locations/'+lat+','+lon+'?includeEntityTypes=address&key=AuB_TgCn4vLZq_rFH8btGAYIZiigOwKplCqBqSuG7Shjew1oUPzyeoENK_oEsaKf').then(function(response) {
-
-    return response.json();
-  }).then(function(json) {   
-   $('#mi_direccion').html(`${json.resourceSets[0].resources[0].address.addressLine||''}, ${json.resourceSets[0].resources[0].address.adminDistrict2||''}, ${json.resourceSets[0].resources[0].address.adminDistrict||''}`);   
-  }) 
- 
-} */
-
+}); */
 
 function getFeature(pixel){
   var feature = map.forEachFeatureAtPixel(pixel,
-    function(feature, layer) {      
-      if (feature.id_.includes('ra_nqn')){
-        return feature;
-      }
+    function(feature, layer) {            
+        return feature;      
     });
 
     return feature
 }
 
+ //***** FIN MAPA*/
 
+ //***** FUNCIONES DE CONTROL DE LA APP */
+
+ // funcion para obtener los parametros enviados por url
 var getUrlParameter = function getUrlParameter(sParam) {
   const url = window.location;
   const urlObject = new URL(url);
@@ -371,7 +274,7 @@ function marcarDireccionInicial(){
         var point = ol.proj.fromLonLat(coordenadasLonLat)
         marcarPunto(point,coordenadasLonLat)
         map.getView().setCenter(ol.proj.transform(coordenadasLonLat, 'EPSG:4326','EPSG:3857'));
-        map.getView().setZoom(19);   
+        map.getView().setZoom(15);   
         direccionNoReferenciada(false)
       }else{
         // la dirección indicada no ha podido ser referenciada
@@ -456,8 +359,87 @@ xmlhttp.setRequestHeader('Content-Type', 'text/xml');
 xmlhttp.send(sr);
   
 }
+
+
   
- marcarDireccionInicial() 
+function iniciarApp(){
+  // obtenemos el modo de visualizacion  
+  if(getUrlParameter('modo')=='establecimientos'){
+    modoVisualizacion=1
+    iniciarModoEstablecimiento()
+
+  }else{
+    modoVisualizacion=2
+    iniciarModoRadios()
+    
+  }
+  
+  marcarDireccionInicial()
+}
+
+ // Icono utilizado por los establecimientos
+ var iconStyle = new ol.style.Style({
+  image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+   anchor: [0.5, 1],
+   src: `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAAAyVBMVEUAAADnTDznTDvnTDvnTDvAOCrnTDznSzvnTDvAOCvnTDznTDznTDvnTDzAOCrnTDvnTDvnTDvnTDznTDvAOSrnTDznTDzTQjLSQjPnTDzpTDvnSzvAOCrnTDvAOSvAOCvnSzvnTDzAOCvnSzznTDznTDvnTDy/OCvnTDznTDvnTDznSzvmSzvAOCvnTDzAOCvnTDvmTDvAOCq+OCrpTDzkSzrbRjbWRDTMPi+8NinrTT3EOy3gSDjTQjPPQDLHPS/DOiu5NCjHPC5jSfbDAAAAMHRSTlMAKPgE4hr8CfPy4NzUt7SxlnpaVlRPIhYPLgLt6ebOysXAwLmej4iGgGtpYkpAPCBw95QiAAAB50lEQVQ4y42T13aDMAxAbVb2TrO6927lwQhktf//UZWVQ1sIJLnwwBEXWZYwy1Lh/buG5TXu+rzC9nByDQCCbrg+KdUmLUsgW08IqzUp9rgDf5Ds8CJv1KS3mNL3fbGlOdr1Kh1AtFgs15vke7kQGpDO7pYGtJgfbRSxiXxaf7AjgsFfy1/WPu0r73WpwGiu1Fn78bF9JpWKUBTQzYlNQIK5lDcuQ9wbKeeBiTWz3vgUv44TpS4njJhcKpXEuMzpOCN+VE2FmPA9jbxjSrOf6kdG7FvYmkBJ6aYRV0oVYIusfkZ8xeHpUMna+LeYmlShxkG+Zv8GyohLf6aRzzRj9t+YVgWaX1IO08hQyi9tapxmB3huxJUp8q/EVYzB89wQr0y/FwqrHLqoDWsoLsxQr1iWNxp1iCnlRbt9IdELwfDGcrSMKJbGxLx4LenTFsszFSYehwl6aCZhTNPnO6LdBYOGYBVFqwAfDF27+CQIvLUGrTU9lpyFBw9yeA+sCNsRkJ5WQjg2K+QFcrywEjoCBHVpe3VYGZyk9NQCLxXte/jHvc1K4XXKSNQ520PPtIhcr8f2MXPShNiavTyn4jM7wK0g75YdYgTE6KA465nN9GbsILwhoMHZETx53hM7Brtet9lRDAYFwR80rG+sfAnbpQAAAABJRU5ErkJggg==`
+   }))
+ });
+
+
+function filtrarMapaEstablecimientos(nivel){
+  map.getLayers().forEach(layer=>{    
+     if(layer instanceof ol.layer.Vector){
+      let source =layer.getSource()
+      source.forEachFeature(feature=>{ 
+        if( feature.values_.MOD_OFERTA.replace(/ /g,'').toLowerCase() == nivel || nivel =='todos'){         
+          feature.setStyle(iconStyle)
+        }else{
+          feature.setStyle([])
+        }
+        
+        }) 
+    } 
+  })
+
+}
+
+function iniciarModoEstablecimiento(){
+
+  // ocultamos los elementos del front-end que no irian
+  $('#tituloModoRadios').hide()
+  
+  $('#ubicacionModoRadios').hide()
+  
+ // cargamos el mapa
+ 
+ 
+   var vector = new ol.layer.Vector({
+     source: new ol.source.Vector({
+       format: new ol.format.GeoJSON(),
+       url: 'http://geoeducacion.neuquen.gov.ar/proxy/http://geoeducacion.neuquen.gov.ar/geoserver/establecimientos_edu/wfs?=&service=wfs&request=GetFeature&typeNames=establecimientos_edu:Estab_agosto&outputFormat=json&srsName=EPSG:3857'
+     
+     }),
+     style:  iconStyle
+ 
+   })
+
+   map.addLayer(vector);
+
+   //habilitamos el filtro de establecimientos
+ 
+ 
+}
+
+function iniciarModoRadios(){
+  // ocultamos los elementos del front-end que no irian
+  $('#tituloModoEstablecimientos').hide()
+  $('#nivelesModoEstablecimientos').hide()
+  // cargamos la capa de radios
+  cargarCapaRadios()
+}
+ 
+
+iniciarApp()
 
 
 })(window, document);

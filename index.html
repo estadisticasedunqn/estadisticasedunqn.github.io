@@ -75,17 +75,52 @@
         <div class="container">        
             <div class="columns">
                 <div class="column is-two-thirds">
-                  <div class="notification is-info is-light" >                   
+                  <div class="notification is-info is-light" id="tituloModoRadios" >                   
                     <span id="informacionNoReferenciada"><b>La dirección indicada no ha podido ser ubicada en el mapa.</b></span> A continuación le solicitaremos que indique/marque en el mapa el punto donde se encuentra ubicado su domicilio &nbsp;<span id="tipoDireccionTitulo"></span>.
                     Luego confirme su ubicación.
                   </div>
+                  <div class="notification is-info is-light" id="tituloModoEstablecimientos" >                   
+                    Establecimientos de la Provincia del Neuquén
+                  </div>
                   <div class="card">
                     <div class="card-content">
-                      <div id="map" tabindex="0"></div>
+
+                      <div class="field is-horizontal mb-4" id="nivelesModoEstablecimientos">
+                        <div class="field-label is-normal">
+                          <label class="label">Mostrar</label>
+                        </div>
+                        <div class="field-body">
+                          <div class="field is-narrow">
+                            <div class="control">
+                              <div class="select is-fullwidth" >
+                                <select id="selectNiveles">
+                                  <option value="todos">Todos los Niveles</option>
+                                  <option value="común-inicial">Nivel Inicial</option>
+                                  <option value="común-primaria">Nivel Primario</option>
+                                  <option value="común-secundaria">Nivel Medio</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                     <!--  <div class="select " >
+                    
+                        
+                        <select id="selectNiveles">
+                          <option value="todos">Todos los Niveles</option>
+                          <option value="común-inicial">Nivel Inicial</option>
+                          <option value="común-primaria">Nivel Primario</option>
+                          <option value="común-secundaria">Nivel Medio</option>
+                        </select>
+                      </div> -->
+
+                      <div id="map" tabindex="0" ></div>
                     </div>
                   </div>
              </div>
-             <div class="column is-one-third">
+             <div class="column is-one-third" id="ubicacionModoRadios">
                 <div class="card">
                     <header class="card-header">
                       <p class="card-header-title has-text-info">
