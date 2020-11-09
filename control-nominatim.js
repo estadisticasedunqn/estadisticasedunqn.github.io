@@ -104,7 +104,9 @@ function cargarCapaRadios(){
    var style = [
       new ol.style.Style({       
         fill: new ol.style.Fill({
-          color: 'rgba(1, 1, 1, 1)'
+          //color: 'rgba(0, 0, 0, 0)'
+          color: 'rgba(255,255,0,0.1)'
+          
         })
       })
     ]
