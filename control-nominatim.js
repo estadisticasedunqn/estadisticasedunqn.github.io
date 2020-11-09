@@ -60,20 +60,7 @@
   }),
   popup = new ol.Overlay.Popup();
 
-//Instantiate with some options and add the Control
-/* var geocoder = new Geocoder('nominatim', {
-  provider: 'bing',
-  key:'AuB_TgCn4vLZq_rFH8btGAYIZiigOwKplCqBqSuG7Shjew1oUPzyeoENK_oEsaKf',
-  targetType: 'text-input',    
-  lang: 'es',
-  placeholder: 'Calle, Altura y Localidad a Buscar ...',
-  sufix: 'Neuquen, Confluencia',
-  limit: 15,
-  keepOpen: false
-  
-}); */
 
-//map.addControl(geocoder);
 map.addOverlay(popup);
 
 
@@ -112,62 +99,86 @@ var style = [countryStyle, labelStyle];
   
 function cargarCapaRadios(){
 
+  var styleRadios = function(feature) {
+  
+   var style = [
+      new ol.style.Style({       
+        fill: new ol.style.Fill({
+          color: 'rgba(1, 1, 1, 1)'
+        })
+      })
+    ]
  
+    return style;
+  }
+
+ //a- cargamos la capa de los radios de inicial
   var vectorLayer = new ol.layer.Vector({
     source: new ol.source.Vector({    
-      url:'http://geoeducacion.neuquen.gov.ar/proxy/http://geoeducacion.neuquen.gov.ar/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&' +
-      'typename=establecimientos_edu:ra_nqn_tec&outputFormat=application/json&srsname=EPSG:3857&',
+      url:'https://estadisticasedunqn.com.ar:3000/radios/geoserver/radios/inicial',
       serverType: 'geoserver',
       crossOrigin: 'anonymous', 
       // If you want to use a static file, change the previous row to
     //  url: 'data/radios_tecnica.json',
       format: new ol.format.GeoJSON()
     }),
-    style: function(feature) {
-  
-      var geometry = feature.getGeometry();
-      if (geometry.getType() == 'MultiPolygon') {
-        // Only render label for the widest polygon of a multipolygon
-        var polygons = geometry.getPolygons();
-        var widest = 0;
-        for (var i = 0, ii = polygons.length; i < ii; ++i) {
-          var polygon = polygons[i];
-          var width = ol.extent.getWidth(polygon.getExtent());
-          if (width > widest) {
-            widest = width;
-            geometry = polygon;
-          }
-        }
-      }
-      
-      // Check if default label position fits in the view and move it inside if necessary
-      geometry = geometry.getInteriorPoint();
-      var size = map.getSize();
-      var extent = map.getView().calculateExtent([size[0]-12,size[1]-12]);
-      var textAlign = 'center';
-      var coordinates = geometry.getCoordinates();
-      if (!geometry.intersectsExtent(extent)) {
-        geometry = new ol.geom.Point(ol.geom.Polygon.fromExtent(extent).getClosestPoint(coordinates));
-        // Align text if at either side
-        var x = geometry.getCoordinates()[0];
-        if (x > coordinates[0]) {
-          textAlign = 'left';
-        }
-        if (x < coordinates[0]) {
-          textAlign = 'right';
-        }
-      }
-  
-      labelStyle.setGeometry(geometry);
-      labelStyle.getText().setText(feature.get('ESTABLECIM').replace(' ','\n'));
-      labelStyle.getText().setTextAlign(textAlign);
-      return style;
-    },
+    style: styleRadios ,   
     declutter: true,
     renderBuffer: 1  // If left at default value labels will appear when countries not visible
   });
   
   map.addLayer(vectorLayer); 
+
+  //b- cargamos la capa de los radios de Primaria
+  var vectorLayer = new ol.layer.Vector({
+    source: new ol.source.Vector({    
+      url:'https://estadisticasedunqn.com.ar:3000/radios/geoserver/radios/primaria',
+      serverType: 'geoserver',
+      crossOrigin: 'anonymous', 
+      // If you want to use a static file, change the previous row to
+    //  url: 'data/radios_tecnica.json',
+      format: new ol.format.GeoJSON()
+    }),
+    style: styleRadios ,
+    declutter: true,
+    renderBuffer: 1  // If left at default value labels will appear when countries not visible
+  });
+  
+  map.addLayer(vectorLayer); 
+
+  //c- cargamos la capa de los radios de Secundarios
+  var vectorLayer = new ol.layer.Vector({
+    source: new ol.source.Vector({    
+      url:'https://estadisticasedunqn.com.ar:3000/radios/geoserver/radios/secundaria',
+      serverType: 'geoserver',
+      crossOrigin: 'anonymous', 
+      // If you want to use a static file, change the previous row to
+    //  url: 'data/radios_tecnica.json',
+      format: new ol.format.GeoJSON()
+    }),
+    style: styleRadios ,
+    declutter: true,
+    renderBuffer: 1  // If left at default value labels will appear when countries not visible
+  });
+  
+  map.addLayer(vectorLayer); 
+
+   //d- cargamos la capa de los radios de Secundarios
+   var vectorLayer = new ol.layer.Vector({
+    source: new ol.source.Vector({    
+      url:'https://estadisticasedunqn.com.ar:3000/radios/geoserver/radios/tecnica',
+      serverType: 'geoserver',
+      crossOrigin: 'anonymous', 
+      // If you want to use a static file, change the previous row to
+    //  url: 'data/radios_tecnica.json',
+      format: new ol.format.GeoJSON()
+    }),
+    style: styleRadios ,
+    declutter: true,
+    renderBuffer: 1  // If left at default value labels will appear when countries not visible
+  });
+  
+  map.addLayer(vectorLayer);
 }
 
 
@@ -176,13 +187,13 @@ function cargarCapaRadios(){
 
 map.on('singleclick', function (evt) {  
 
-  if(modoVisualizacion==2){
+  if(modoVisualizacion==2){    
     let coordenadas = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326')
     marcarPunto(evt.coordinate,coordenadas)   
   }
   else{
-    let feature = getFeature(evt.pixel)
-   
+    let features = getFeature(evt.pixel)
+    feature = features[0]
     if (feature) {
       var content = `<p>${feature.values_.NOMBRE} </p><p>${feature.values_.MOD_OFERTA}</p>`;
       popup.show(evt.coordinate, content);
@@ -191,27 +202,16 @@ map.on('singleclick', function (evt) {
    
 });
 
-//Listen when an address is chosen
-/* geocoder.on('addresschosen', function(evt) {  
-  console.log(evt)
-  window.setTimeout(function() {
-    
-    popup.show(evt.coordinate, evt.address.formatted);
-    let feature = getFeature(map.getPixelFromCoordinate(evt.coordinate))
-     if (feature) $('#mi_escuela').html(`${feature.get('ESTABLECIM')}`);
-
-    $('#mi_direccion').html(`${evt.address.details.name}`);
-    map.getView().setZoom(20);
-  }, 2000);
-}); */
 
 function getFeature(pixel){
-  var feature = map.forEachFeatureAtPixel(pixel,
-    function(feature, layer) {            
-        return feature;      
-    });
+  features=[]
+  map.forEachFeatureAtPixel(pixel,
+    function(feature, layer) {     
+          features.push(feature);
+        }     
+    );
 
-    return feature
+    return features
 }
 
  //***** FIN MAPA*/
@@ -264,8 +264,7 @@ function marcarDireccionInicial(){
 
   fetch(urlQuery.href).then(function(response) {
     return response.json();
-  }).then(function(json) { 
-    console.log(json)  
+  }).then(function(json) {       
     if(json.statusCode==200 && json.resourceSets.length==1 ){
       localizacionRetorno = json.resourceSets[0]      
       if(localizacionRetorno.resources[0].address.adminDistrict=='Neuquén'){
@@ -307,9 +306,12 @@ function marcarPunto(point,coordenadas){
 
 function  confirmarUbicacion(){
   if(coordenadasUbicacion!==null){
-    let feature = getFeature(map.getPixelFromCoordinate(puntoUbicacion))
-    if (feature){     
-      $('#json').html(JSON.stringify(generarInformacionRetorno(feature)));
+    let features = getFeature(map.getPixelFromCoordinate(puntoUbicacion))
+    if (features){    
+     // generarInformacionRetorno(features);
+    let informacionRetorno= generarInformacionRadiosParaRetorno(coordenadasUbicacion[0],coordenadasUbicacion[1],tipoRadio,features)
+    enviarDatos(informacionRetorno)
+     
     }
   }else{
     alert('Debe indicar/marcar en el mapa el punto donde se encuentra ubicado su domicilio')
@@ -317,11 +319,11 @@ function  confirmarUbicacion(){
   
 }
 
-function generarInformacionRetorno(feature){ 
+function enviarDatos(informacionDireccionRadios){ 
   let xmlhttp = new XMLHttpRequest();
 
   // generamos el objeto con los datos de radios y las coordenadas de la ubicación a enviar
-  let informacionDireccionRadios = {"Coordenadas":{"Latitud":coordenadasUbicacion[0],"Longitud":coordenadasUbicacion[1],"Radios":[{"CUE":"CUEXXXX","Nombre":feature.get('ESTABLECIM'),"Nivel":"ST","TipoRadio":tipoRadio,},]}}
+  //let informacionDireccionRadios2 = {"Coordenadas":{"Latitud":coordenadasUbicacion[0],"Longitud":coordenadasUbicacion[1],"Radios":[{"CUE":"CUEXXXX","Nombre":"CPSM 1233","Nivel":"ST","TipoRadio":tipoRadio,},]}}
 
   let sr =`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:cer="CertiRegu">
   <soapenv:Header/>
@@ -416,8 +418,7 @@ function iniciarModoEstablecimiento(){
    var vector = new ol.layer.Vector({
      source: new ol.source.Vector({
        format: new ol.format.GeoJSON(),
-       url: 'http://geoeducacion.neuquen.gov.ar/proxy/http://geoeducacion.neuquen.gov.ar/geoserver/establecimientos_edu/wfs?=&service=wfs&request=GetFeature&typeNames=establecimientos_edu:Estab_agosto&outputFormat=json&srsName=EPSG:3857'
-     
+       url: 'https://estadisticasedunqn.com.ar:3000/radios/geoserver/establecimientos'
      }),
      style:  iconStyle
  
