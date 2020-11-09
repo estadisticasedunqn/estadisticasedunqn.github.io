@@ -16,3 +16,19 @@ se obtienen los radios escolares que pertenezcan a dicho punto. Dicho modo inter
 la app de inscripcion online. Modo de funcionamiento
 
 https://estadisticasedunqn.github.io/?modo=radios&direccion=concordia+3381&localidad=neuquen&tipoRadio=D&registranteId=26
+
+
+#### Informacion retorno
+cuando el usuario confirme la ubicacion la app enviara un elemento json para su almacenamiento con la siguiente información:
+    {
+        "Latitud":number,
+        "Longitud":number,
+        "Radios": [
+            {
+            "CUE":number(9),
+            "Nombre":text,
+            "Nivel":I|P|S|ST (Inicial|Primaria|Secundaria|Secundaria Tecnica),
+            "TipoRadio":D|L (Domicilio|Laboral) 
+            },...
+        ]
+    } 

@@ -373,9 +373,10 @@ function iniciarApp(){
     iniciarModoEstablecimiento()
 
   }else{
+    $('#confirmacionUbicacion').addClass( "is-loading" )
     modoVisualizacion=2
     iniciarModoRadios()
-    
+    setTimeout(function(){ $('#confirmacionUbicacion').removeClass( "is-loading" ) }, 6000);
   }
   
   marcarDireccionInicial()
