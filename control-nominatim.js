@@ -381,7 +381,7 @@ function iniciarApp(){
     $('#confirmacionUbicacion').addClass( "is-loading" )
     modoVisualizacion=2
     iniciarModoRadios()
-    setTimeout(function(){ $('#confirmacionUbicacion').removeClass( "is-loading" ) }, 6000);
+    setTimeout(function(){ $('#confirmacionUbicacion').removeClass( "is-loading" ) }, 8000);
   }
   
   marcarDireccionInicial()
