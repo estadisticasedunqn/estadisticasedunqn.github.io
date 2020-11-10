@@ -254,7 +254,7 @@ function marcarDireccionInicial(){
   //2. utilizamos georeverse para determinar la latitud y longitud de la localizacion dada
   const urlQuery = new URL("https://dev.virtualearth.net/REST/v1/Locations");
   urlQuery.searchParams.append("countryRegion", "Argentina");
-  urlQuery.searchParams.append("adminDistrict", "Neuquén");
+  urlQuery.searchParams.append("adminDistrict", "Neuquen");
   urlQuery.searchParams.append("locality", localidadReferencia);
   urlQuery.searchParams.append("addressLine", direccionReferencia);
   urlQuery.searchParams.append("Key", "AuB_TgCn4vLZq_rFH8btGAYIZiigOwKplCqBqSuG7Shjew1oUPzyeoENK_oEsaKf");
@@ -269,13 +269,18 @@ function marcarDireccionInicial(){
   }).then(function(json) {       
     if(json.statusCode==200 && json.resourceSets.length==1 ){
       localizacionRetorno = json.resourceSets[0]      
-      if(localizacionRetorno.resources[0].address.adminDistrict=='Neuquén'){
+      if(localizacionRetorno.resources[0].address.adminDistrict.includes('Neuqu')){
         coordenadasRetorno = localizacionRetorno.resources[0].point.coordinates
         coordenadasLonLat=[coordenadasRetorno[1],coordenadasRetorno[0]]
         var point = ol.proj.fromLonLat(coordenadasLonLat)
         marcarPunto(point,coordenadasLonLat)
         map.getView().setCenter(ol.proj.transform(coordenadasLonLat, 'EPSG:4326','EPSG:3857'));
-        map.getView().setZoom(15);   
+        if(modoVisualizacion==1){
+          map.getView().setZoom(15);   
+        }else{
+          map.getView().setZoom(18);   
+        }
+        
         direccionNoReferenciada(false)
       }else{
         // la dirección indicada no ha podido ser referenciada
