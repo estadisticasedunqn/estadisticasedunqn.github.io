@@ -28,9 +28,9 @@ function generarInformacionRadiosParaRetorno(latitud,longitud,tipoRadio,radios){
         }
     } 
     
-   // console.log(JSON.stringify(JSON.stringify(informacionRetorno).replace(",{}",",")))
-    
-    return JSON.stringify(informacionRetorno).replace(",{}",",")
+    let dataRetorno = JSON.stringify(informacionRetorno).replace(",{}",",")
+   
+    return dataRetorno
 }
 
 function getNivel(nivelReferencia){

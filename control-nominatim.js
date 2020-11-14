@@ -104,9 +104,8 @@ function cargarCapaRadios(){
    var style = [
       new ol.style.Style({       
         fill: new ol.style.Fill({
-          //color: 'rgba(0, 0, 0, 0)'
-          color: 'rgba(255,255,0,0.1)'
-          
+          color: 'rgba(0, 0, 0, 0)'
+          //color: 'rgba(255,255,0,0.1)'
         })
       })
     ]
@@ -337,7 +336,7 @@ function enviarDatos(informacionDireccionRadios){
   <soapenv:Body>
      <cer:WSRadiosAlumnos.Execute>
         <cer:Registranteid>${registranteId}</cer:Registranteid>
-        <cer:Varcharjson>${JSON.stringify(informacionDireccionRadios)}</cer:Varcharjson>
+        <cer:Varcharjson>${informacionDireccionRadios}</cer:Varcharjson>
      </cer:WSRadiosAlumnos.Execute>
   </soapenv:Body>
 </soapenv:Envelope>`; 
@@ -381,7 +380,7 @@ function iniciarApp(){
     $('#confirmacionUbicacion').addClass( "is-loading" )
     modoVisualizacion=2
     iniciarModoRadios()
-    setTimeout(function(){ $('#confirmacionUbicacion').removeClass( "is-loading" ) }, 8000);
+    setTimeout(function(){ $('#confirmacionUbicacion').removeClass( "is-loading" ) }, 10000);
   }
   
   marcarDireccionInicial()
