@@ -17,10 +17,14 @@ la app de inscripcion online. Modo de funcionamiento
 
 https://estadisticasedunqn.github.io/?modo=radios&direccion=concordia+3381&localidad=neuquen&tipoRadio=D&registranteId=26
 
+modo = radios | establecimientos
+tipoRadio= D | L (Domicilio,Laboral)
+
 
 #### Informacion retorno
 cuando el usuario confirme la ubicacion la app enviara un elemento json para su almacenamiento con la siguiente información:
     {
+        "Coordenadas":{
         "Latitud":number,
         "Longitud":number,
         "Radios": [
@@ -31,4 +35,5 @@ cuando el usuario confirme la ubicacion la app enviara un elemento json para su 
             "TipoRadio":D|L (Domicilio|Laboral) 
             },...
         ]
+        }
     } 

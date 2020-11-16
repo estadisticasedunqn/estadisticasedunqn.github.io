@@ -29,7 +29,7 @@ function generarInformacionRadiosParaRetorno(latitud,longitud,tipoRadio,radios){
     } 
     
     let dataRetorno = JSON.stringify(informacionRetorno).replace(",{}",",")
-   
+   console.log(dataRetorno)
     return dataRetorno
 }
 
