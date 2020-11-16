@@ -37,3 +37,20 @@ cuando el usuario confirme la ubicacion la app enviara un elemento json para su 
         ]
         }
     } 
+
+
+
+## Uso en Desarrollo
+
+sobre el directorio raiz. Ejecutar los siguientes comandos en consola
+
+1- instalar las dependencias
+npm i
+
+2- ejecutar la aplicacion
+npm run dev
+
+3- probar la aplicacion
+localhost:3000?modo=radios&direccion=concordia+3381&localidad=neuquen&tipoRadio=D&registranteId=26
+
+
