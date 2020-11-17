@@ -147,39 +147,46 @@ function cargarCapaRadios(){
   
   map.addLayer(vectorLayer); 
 
-  //c- cargamos la capa de los radios de Secundarios
-  var vectorLayer = new ol.layer.Vector({
-    source: new ol.source.Vector({    
-      url:'https://estadisticasedunqn.com.ar:3000/radios/geoserver/radios/secundaria',
-      serverType: 'geoserver',
-      crossOrigin: 'anonymous', 
-      // If you want to use a static file, change the previous row to
-    //  url: 'data/radios_tecnica.json',
-      format: new ol.format.GeoJSON()
-    }),
-    style: styleRadios ,
-    declutter: true,
-    renderBuffer: 1  // If left at default value labels will appear when countries not visible
-  });
-  
-  map.addLayer(vectorLayer); 
+  //c- cargamos la capa de los radios de Secundarios solo si estamos trabajando con domicilio particular
+  debugger
+  if (tipoRadio=='D'){
 
-   //d- cargamos la capa de los radios de Secundarios
-   var vectorLayer = new ol.layer.Vector({
-    source: new ol.source.Vector({    
-      url:'https://estadisticasedunqn.com.ar:3000/radios/geoserver/radios/tecnica',
-      serverType: 'geoserver',
-      crossOrigin: 'anonymous', 
-      // If you want to use a static file, change the previous row to
-    //  url: 'data/radios_tecnica.json',
-      format: new ol.format.GeoJSON()
-    }),
-    style: styleRadios ,
-    declutter: true,
-    renderBuffer: 1  // If left at default value labels will appear when countries not visible
-  });
+var vectorLayer = new ol.layer.Vector({
+  source: new ol.source.Vector({    
+    url:'https://estadisticasedunqn.com.ar:3000/radios/geoserver/radios/secundaria',
+    serverType: 'geoserver',
+    crossOrigin: 'anonymous', 
+    // If you want to use a static file, change the previous row to
+  //  url: 'data/radios_tecnica.json',
+    format: new ol.format.GeoJSON()
+  }),
+  style: styleRadios ,
+  declutter: true,
+  renderBuffer: 1  // If left at default value labels will appear when countries not visible
+});
+
+map.addLayer(vectorLayer); 
+
+ //d- cargamos la capa de los radios de Secundarios
+ var vectorLayer = new ol.layer.Vector({
+  source: new ol.source.Vector({    
+    url:'https://estadisticasedunqn.com.ar:3000/radios/geoserver/radios/tecnica',
+    serverType: 'geoserver',
+    crossOrigin: 'anonymous', 
+    // If you want to use a static file, change the previous row to
+  //  url: 'data/radios_tecnica.json',
+    format: new ol.format.GeoJSON()
+  }),
+  style: styleRadios ,
+  declutter: true,
+  renderBuffer: 1  // If left at default value labels will appear when countries not visible
+});
+
+map.addLayer(vectorLayer);
+  }
   
-  map.addLayer(vectorLayer);
+
+  
 }
 
 
@@ -232,7 +239,7 @@ function marcarDireccionInicial(){
   //1- obtenemos los datos enviados en la url
   var localidadReferencia = getUrlParameter('localidad');
   var direccionReferencia = getUrlParameter('direccion');
-   tipoRadio = getUrlParameter('tipoRadio');  // D -> 'Domicilio' -- L -> 'Laboral'
+  
   registranteId = getUrlParameter('registranteId');
   var longitud = getUrlParameter('longitud');
   var latitud = getUrlParameter('latitud');
@@ -407,6 +414,10 @@ xmlhttp.send(sr);
 
   
 function iniciarApp(){
+
+  // obtenemos el tipo de radio para setear las leyendas iniciales
+  tipoRadio = getUrlParameter('tipoRadio');  // D -> 'Domicilio' -- L -> 'Laboral'
+
   // obtenemos el modo de visualizacion  
   if(getUrlParameter('modo')=='establecimientos'){
     modoVisualizacion=1
