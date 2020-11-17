@@ -7,7 +7,7 @@
   var coordenadasUbicacion=null
   var puntoUbicacion=null
   var registranteId = null
-  var tipoRadio = null
+  var tipoRadio = null  // D | L (Domicilio,Laboral)
 
   //***** FIN VARIABLES GLOBALES*/
     
@@ -232,10 +232,12 @@ function marcarDireccionInicial(){
   //1- obtenemos los datos enviados en la url
   var localidadReferencia = getUrlParameter('localidad');
   var direccionReferencia = getUrlParameter('direccion');
-   tipoRadio = getUrlParameter('tipoRadio');  // D -> 'Domicilio' -- T -> 'Trabajo'
+   tipoRadio = getUrlParameter('tipoRadio');  // D -> 'Domicilio' -- L -> 'Laboral'
   registranteId = getUrlParameter('registranteId');
+  var longitud = getUrlParameter('longitud');
+  var latitud = getUrlParameter('latitud');
 
-  if (direccionReferencia===null){
+  if (direccionReferencia===null && (longitud ===null && latitud===null) ){
     $('#mi_direccion').html(`Información no suministrada`);
     return
   }
@@ -248,9 +250,33 @@ function marcarDireccionInicial(){
   }
   
   
+
   $('#mi_direccion').html(`${direccionReferencia}, ${localidadReferencia}`);
 
-  //2. utilizamos georeverse para determinar la latitud y longitud de la localizacion dada
+  //2. utilizamos georeverse para determinar la latitud y longitud de la localizacion dada. 
+  //Simpre y cuando las coordenadas no hayan sido enviadas por parametro
+  //chequeamos si las coordenadas fueron enviadas por parametro
+  if(!!longitud && !!latitud){
+   setTimeout(function(){ indicarPuntoInicialPorLatitudLongitud(latitud,longitud)}, 2000);
+  } else{
+    indicarPuntoInicialPorDireccion(localidadReferencia,direccionReferencia)
+  }
+
+  
+  
+}
+
+function indicarPuntoInicialPorLatitudLongitud(latitud,longitud){
+  
+  coordenadasLonLat=[+latitud,+longitud]
+  var point = ol.proj.fromLonLat(coordenadasLonLat)
+ 
+  marcarPunto(point,coordenadasLonLat)
+ 
+  establecerZoomMapa(coordenadasLonLat)
+
+}
+function indicarPuntoInicialPorDireccion(localidadReferencia,direccionReferencia){
   const urlQuery = new URL("https://dev.virtualearth.net/REST/v1/Locations");
   urlQuery.searchParams.append("countryRegion", "Argentina");
   urlQuery.searchParams.append("adminDistrict", "Neuquen");
@@ -272,13 +298,9 @@ function marcarDireccionInicial(){
         coordenadasRetorno = localizacionRetorno.resources[0].point.coordinates
         coordenadasLonLat=[coordenadasRetorno[1],coordenadasRetorno[0]]
         var point = ol.proj.fromLonLat(coordenadasLonLat)
+       
         marcarPunto(point,coordenadasLonLat)
-        map.getView().setCenter(ol.proj.transform(coordenadasLonLat, 'EPSG:4326','EPSG:3857'));
-        if(modoVisualizacion==1){
-          map.getView().setZoom(15);   
-        }else{
-          map.getView().setZoom(18);   
-        }
+        establecerZoomMapa(coordenadasLonLat)
         
         direccionNoReferenciada(false)
       }else{
@@ -292,7 +314,15 @@ function marcarDireccionInicial(){
     }
   
   })
-  
+}
+
+function establecerZoomMapa(coordenadasLonLat){
+    map.getView().setCenter(ol.proj.transform(coordenadasLonLat, 'EPSG:4326','EPSG:3857'));
+  if(modoVisualizacion==1){
+    map.getView().setZoom(15);   
+  }else{
+    map.getView().setZoom(18);   
+  } 
 }
 
 function direccionNoReferenciada(flag){
@@ -307,15 +337,21 @@ function direccionNoReferenciada(flag){
 function marcarPunto(point,coordenadas){
   coordenadasUbicacion = coordenadas 
   puntoUbicacion =   point
-  popup.show( point, '<h1> <img src="assets/home.ico" style="height:25px"> <b> Mi domicilio</b></h1>');
+  let leyendaAdicional=''
+  if (tipoRadio==='L'){
+    leyendaTipoRadio='trabajo'
+  }else{
+    leyendaTipoRadio='domicilio'
+  }
+  popup.show( point, `<div><h1> <img src="assets/home.ico" style="height:25px;"> <b> Mi ${leyendaTipoRadio}</b></h1></div>`);
 }
 
 function  confirmarUbicacion(){
   if(coordenadasUbicacion!==null){
     let features = getFeature(map.getPixelFromCoordinate(puntoUbicacion))
-    if (features){    
-     // generarInformacionRetorno(features);
+    if (features){      
     let informacionRetorno= generarInformacionRadiosParaRetorno(coordenadasUbicacion[0],coordenadasUbicacion[1],tipoRadio,features)
+    
     enviarDatos(informacionRetorno)
      
     }
@@ -378,9 +414,14 @@ function iniciarApp(){
 
   }else{
     $('#confirmacionUbicacion').addClass( "is-loading" )
+    $('#leyendaCargandoInformacion').show()
+    
     modoVisualizacion=2
     iniciarModoRadios()
-    setTimeout(function(){ $('#confirmacionUbicacion').removeClass( "is-loading" ) }, 10000);
+    setTimeout(function(){ 
+      $('#confirmacionUbicacion').removeClass( "is-loading" );
+      $('#leyendaCargandoInformacion').hide() 
+    }, 10000);
   }
   
   marcarDireccionInicial()
