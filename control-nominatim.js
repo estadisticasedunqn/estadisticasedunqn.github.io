@@ -147,8 +147,7 @@ function cargarCapaRadios(){
   
   map.addLayer(vectorLayer); 
 
-  //c- cargamos la capa de los radios de Secundarios solo si estamos trabajando con domicilio particular
-  debugger
+  //c- cargamos la capa de los radios de Secundarios solo si estamos trabajando con domicilio particular  
   if (tipoRadio=='D'){
 
 var vectorLayer = new ol.layer.Vector({
@@ -344,7 +343,7 @@ function direccionNoReferenciada(flag){
 function marcarPunto(point,coordenadas){
   coordenadasUbicacion = coordenadas 
   puntoUbicacion =   point
-  let leyendaAdicional=''
+  
   if (tipoRadio==='L'){
     leyendaTipoRadio='trabajo'
   }else{

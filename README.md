@@ -52,6 +52,8 @@ cuando el usuario confirme la ubicacion la app enviara un elemento json para su 
 
 
 ## Uso en Desarrollo
+git clone https://github.com/estadisticasedunqn/estadisticasedunqn.github.io.git
+
 
 sobre el directorio raiz. Ejecutar los siguientes comandos en consola
 
