@@ -379,6 +379,7 @@ function enviarDatos(informacionDireccionRadios){
      <cer:WSRadiosAlumnos.Execute>
         <cer:Registranteid>${registranteId}</cer:Registranteid>
         <cer:Varcharjson>${informacionDireccionRadios}</cer:Varcharjson>
+        <cer:Tiporadio>${tipoRadio}</cer:Tiporadio>
      </cer:WSRadiosAlumnos.Execute>
   </soapenv:Body>
 </soapenv:Envelope>`; 
