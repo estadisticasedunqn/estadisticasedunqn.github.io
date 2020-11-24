@@ -116,11 +116,11 @@ function cargarCapaRadios(){
  //a- cargamos la capa de los radios de inicial
   var vectorLayer = new ol.layer.Vector({
     source: new ol.source.Vector({    
-      url:'https://estadisticasedunqn.com.ar:3000/radios/geoserver/radios/inicial',
+      /*url:'https://estadisticasedunqn.com.ar:3000/radios/geoserver/radios/inicial',
       serverType: 'geoserver',
-      crossOrigin: 'anonymous', 
+      crossOrigin: 'anonymous', */
       // If you want to use a static file, change the previous row to
-    //  url: 'data/radios_tecnica.json',
+      url: 'radios/inicial.json',
       format: new ol.format.GeoJSON()
     }),
     style: styleRadios ,   
@@ -133,11 +133,11 @@ function cargarCapaRadios(){
   //b- cargamos la capa de los radios de Primaria
   var vectorLayer = new ol.layer.Vector({
     source: new ol.source.Vector({    
-      url:'https://estadisticasedunqn.com.ar:3000/radios/geoserver/radios/primaria',
+   /*   url:'https://estadisticasedunqn.com.ar:3000/radios/geoserver/radios/primaria',
       serverType: 'geoserver',
-      crossOrigin: 'anonymous', 
+      crossOrigin: 'anonymous', */
       // If you want to use a static file, change the previous row to
-    //  url: 'data/radios_tecnica.json',
+      url: 'radios/primaria.json',
       format: new ol.format.GeoJSON()
     }),
     style: styleRadios ,
@@ -152,11 +152,11 @@ function cargarCapaRadios(){
 
 var vectorLayer = new ol.layer.Vector({
   source: new ol.source.Vector({    
-    url:'https://estadisticasedunqn.com.ar:3000/radios/geoserver/radios/secundaria',
+  /*  url:'https://estadisticasedunqn.com.ar:3000/radios/geoserver/radios/secundaria',
     serverType: 'geoserver',
-    crossOrigin: 'anonymous', 
+    crossOrigin: 'anonymous', */
     // If you want to use a static file, change the previous row to
-  //  url: 'data/radios_tecnica.json',
+    url: 'radios/secundaria.json',
     format: new ol.format.GeoJSON()
   }),
   style: styleRadios ,
@@ -166,14 +166,14 @@ var vectorLayer = new ol.layer.Vector({
 
 map.addLayer(vectorLayer); 
 
- //d- cargamos la capa de los radios de Secundarios
+ //d- cargamos la capa de los radios de Secundarios tecnicos
  var vectorLayer = new ol.layer.Vector({
   source: new ol.source.Vector({    
-    url:'https://estadisticasedunqn.com.ar:3000/radios/geoserver/radios/tecnica',
+  /*  url:'https://estadisticasedunqn.com.ar:3000/radios/geoserver/radios/tecnica',
     serverType: 'geoserver',
-    crossOrigin: 'anonymous', 
+    crossOrigin: 'anonymous', */
     // If you want to use a static file, change the previous row to
-  //  url: 'data/radios_tecnica.json',
+    url: 'radios/secundaria_tecnica.json',
     format: new ol.format.GeoJSON()
   }),
   style: styleRadios ,
@@ -432,7 +432,7 @@ function iniciarApp(){
     setTimeout(function(){ 
       $('#confirmacionUbicacion').removeClass( "is-loading" );
       $('#leyendaCargandoInformacion').hide() 
-    }, 10000);
+    }, 2000);
   }
   
   marcarDireccionInicial()
