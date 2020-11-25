@@ -4,7 +4,9 @@
   "description": "",
   "main": "control-nominatim.js",
   "dependencies": {
-    "lite-server": "^2.5.4"
+    "lite-server": "^2.5.4",
+    "ol": "^6.4.3",
+    "ol-ext": "^3.1.16"
   },
   "devDependencies": {},
   "scripts": {
