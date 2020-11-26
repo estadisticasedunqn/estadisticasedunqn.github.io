@@ -237,13 +237,14 @@ var getUrlParameter = function getUrlParameter(sParam) {
 function marcarDireccionInicial(){
   //1- obtenemos los datos enviados en la url
   var localidadReferencia = getUrlParameter('localidad');
+  var departamentoReferencia = getUrlParameter('departamento');
   var direccionReferencia = getUrlParameter('direccion');
   
   registranteId = getUrlParameter('registranteId');
   var longitud = getUrlParameter('longitud');
   var latitud = getUrlParameter('latitud');
 
-  if (direccionReferencia===null && (longitud ===null && latitud===null) ){
+  if (!direccionReferencia && (!longitud && !latitud) ){
     $('#mi_direccion').html(`Información no suministrada`);
     return
   }
@@ -265,7 +266,7 @@ function marcarDireccionInicial(){
   if(!!longitud && !!latitud){
    setTimeout(function(){ indicarPuntoInicialPorLatitudLongitud(latitud,longitud)}, 2000);
   } else{
-    indicarPuntoInicialPorDireccion(localidadReferencia,direccionReferencia)
+    indicarPuntoInicialPorDireccion(localidadReferencia,departamentoReferencia,direccionReferencia)
   }
 
   
@@ -281,13 +282,20 @@ function indicarPuntoInicialPorLatitudLongitud(latitud,longitud){
  
   establecerZoomMapa(coordenadasLonLat)
 
+  direccionNoReferenciada(false)
+
 }
-function indicarPuntoInicialPorDireccion(localidadReferencia,direccionReferencia){
+function indicarPuntoInicialPorDireccion(localidadReferencia,departamentoReferencia,direccionReferencia){
+  
+  if(localidadReferencia==='CUTRAL CÓ'){
+    localidadReferencia = 'PLAZA HUINCUL'
+  }
+
   const urlQuery = new URL("https://dev.virtualearth.net/REST/v1/Locations");
   urlQuery.searchParams.append("countryRegion", "Argentina");
   urlQuery.searchParams.append("adminDistrict", "Neuquen");
-  urlQuery.searchParams.append("locality", localidadReferencia);
-  urlQuery.searchParams.append("addressLine", direccionReferencia);
+  urlQuery.searchParams.append("locality", departamentoReferencia);
+  urlQuery.searchParams.append("addressLine", `${direccionReferencia} ${localidadReferencia} ${departamentoReferencia}` );
   urlQuery.searchParams.append("Key", "AuB_TgCn4vLZq_rFH8btGAYIZiigOwKplCqBqSuG7Shjew1oUPzyeoENK_oEsaKf");
   urlQuery.searchParams.append("includeNeighborhood", 0);
   urlQuery.searchParams.append("maxResults", 1);
@@ -297,10 +305,15 @@ function indicarPuntoInicialPorDireccion(localidadReferencia,direccionReferencia
 
   fetch(urlQuery.href).then(function(response) {
     return response.json();
-  }).then(function(json) {       
+  }).then(function(json) {    
+    debugger   
     if(json.statusCode==200 && json.resourceSets.length==1 ){
       localizacionRetorno = json.resourceSets[0]      
-      if(localizacionRetorno.resources[0].address.adminDistrict.includes('Neuqu')){
+      debugger
+      if(localizacionRetorno.resources[0].address.adminDistrict.includes('Neuqu')
+      && quitarAcentos(localizacionRetorno.resources[0].address.locality.toLowerCase()) == departamentoReferencia.toLowerCase()
+      && localizacionRetorno.resources[0].entityType !== "Neighborhood"
+      ){
         coordenadasRetorno = localizacionRetorno.resources[0].point.coordinates
         coordenadasLonLat=[coordenadasRetorno[1],coordenadasRetorno[0]]
         var point = ol.proj.fromLonLat(coordenadasLonLat)
@@ -327,7 +340,7 @@ function establecerZoomMapa(coordenadasLonLat){
   if(modoVisualizacion==1){
     map.getView().setZoom(15);   
   }else{
-    map.getView().setZoom(18);   
+    map.getView().setZoom(15);   
   } 
 }
 
@@ -496,6 +509,11 @@ function iniciarModoRadios(){
   $('#nivelesModoEstablecimientos').hide()
   // cargamos la capa de radios
   cargarCapaRadios()
+}
+
+function quitarAcentos(cadena){
+	const acentos = {'á':'a','é':'e','í':'i','ó':'o','ú':'u','Á':'A','É':'E','Í':'I','Ó':'O','Ú':'U'};
+	return cadena.split('').map( letra => acentos[letra] || letra).join('').toString();
 }
  
 
