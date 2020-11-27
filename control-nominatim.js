@@ -306,10 +306,10 @@ function indicarPuntoInicialPorDireccion(localidadReferencia,departamentoReferen
   fetch(urlQuery.href).then(function(response) {
     return response.json();
   }).then(function(json) {    
-    debugger   
+   
     if(json.statusCode==200 && json.resourceSets.length==1 ){
       localizacionRetorno = json.resourceSets[0]      
-      debugger
+    
       if(localizacionRetorno.resources[0].address.adminDistrict.includes('Neuqu')
       && quitarAcentos(localizacionRetorno.resources[0].address.locality.toLowerCase()) == departamentoReferencia.toLowerCase()
       && localizacionRetorno.resources[0].entityType !== "Neighborhood"
