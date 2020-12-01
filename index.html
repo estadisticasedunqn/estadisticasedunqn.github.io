@@ -18,7 +18,7 @@
         
         z-index: 1;
         
-        height: 370px;
+        height: 410px;
       }
       img {
     max-width: 100%;
@@ -138,19 +138,39 @@
                         La ubicación no ha podido ser confirmada!                        
                       </div>
                     </div>                    
-                  </div> 
-                  <hr>
-                  <div class="notification is-link is-light" >                   
+                  </div>                   
+                  <div class="notification is-link is-light mt-1" >                   
                     Una vez confirmada la ubicación, continuar a la pestaña<span id="esPestaniaDomicilioParticular"> Domicilio laboral si lo tuviera o sino a la pestaña</span> alumnos
                   </div>
          </div>
+       
+        
+
+            </div>
+            <div class="column is-two-thirds">
+              <div class="card" >
+                <div class="table-container">
+                  <h3 class="subtitle is-5 mt-2 ml-3">Establecimientos por radio <span id="establecimientosTipoRadio"> </span></h3>
+                  <table class="table is-fullwidth is-striped" id="establecimientosTable">
+                   <thead>
+                     <tr>
+                      <th>CueAnexo</th>
+                      <th>Establecimiento</th>
+                      <th>Nivel</th>
+                     </tr>
+                   </thead>
+                   <tbody>
+
+                   </tbody>
+                  </table>
+                </div>
+                 </div>
+            
             </div>
          
         </div>
       </section>
-
-   
-      
+  
       <br>
       <br>
       
@@ -164,6 +184,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
     <script src="./control-nominatim.js"></script>
     <script src="./radios-informacion.js"></script>
+    <script src="./establecimientos.js"></script>
 
   </body>
 </html>
