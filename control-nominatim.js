@@ -507,6 +507,11 @@ function iniciarModoRadios(){
   // ocultamos los elementos del front-end que no irian
   $('#tituloModoEstablecimientos').hide()
   $('#nivelesModoEstablecimientos').hide()
+
+  if (tipoRadio==='L'){
+    $('#esPestaniaDomicilioParticular').hide()
+  }
+
   // cargamos la capa de radios
   cargarCapaRadios()
 }
