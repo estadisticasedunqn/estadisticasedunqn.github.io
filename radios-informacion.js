@@ -1,5 +1,4 @@
-function generarInformacionRadiosParaRetorno(latitud,longitud,tipoRadio,radios){
-
+function generarInformacionEstablecimentos(tipoRadio,radios){
     informacionRadios=[]
     radios.forEach(radio=>{
         
@@ -18,7 +17,13 @@ function generarInformacionRadiosParaRetorno(latitud,longitud,tipoRadio,radios){
     if(informacionRadios.length>0){
         informacionRadios.push({})
     }
-    
+
+    return informacionRadios
+}
+
+function generarInformacionRadiosParaRetorno(latitud,longitud,tipoRadio,radios){
+
+    let informacionRadios = generarInformacionEstablecimentos(tipoRadio,radios)
    
    let informacionRetorno = {
     "Coordenadas": { 
@@ -30,6 +35,8 @@ function generarInformacionRadiosParaRetorno(latitud,longitud,tipoRadio,radios){
     
     let dataRetorno = JSON.stringify(informacionRetorno).replace(",{}",",")
    console.log(dataRetorno)
+
+   mostrarEstablecimientosTabla(informacionRadios)
     return dataRetorno
 }
 

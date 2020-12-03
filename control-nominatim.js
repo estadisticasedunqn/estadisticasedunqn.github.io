@@ -251,9 +251,11 @@ function marcarDireccionInicial(){
 
   if(tipoRadio=='D'){
     $('#tipoDireccion').html('de domicilio');
+    $('#establecimientosTipoRadio').html('domiciliario');    
   }else{
     $('#tipoDireccion').html('laboral');
     $('#tipoDireccionTitulo').html('laboral');
+    $('#establecimientosTipoRadio').html('laboral');    
   }
   
   
@@ -284,6 +286,14 @@ function indicarPuntoInicialPorLatitudLongitud(latitud,longitud){
 
   direccionNoReferenciada(false)
 
+  // mostramos los establecimientos en la tabla
+
+  setTimeout(function(){ 
+    let features = getFeature(map.getPixelFromCoordinate(puntoUbicacion))
+    mostrarEstablecimientosTabla(generarInformacionEstablecimentos('',features))
+  }, 1000);
+
+  
 }
 function indicarPuntoInicialPorDireccion(localidadReferencia,departamentoReferencia,direccionReferencia){
   
@@ -363,6 +373,7 @@ function marcarPunto(point,coordenadas){
     leyendaTipoRadio='domicilio'
   }
   popup.show( point, `<div><h1> <img src="assets/home.ico" style="height:25px;"> <b> Mi ${leyendaTipoRadio}</b></h1></div>`);
+  clearEstablecimientosTabla()
 }
 
 function  confirmarUbicacion(){
