@@ -6,12 +6,13 @@ function mostrarEstablecimientosTabla(establecimientos){
     establecimientos.forEach( (establecimiento,index) => {
        if(Object.entries(establecimiento).length !== 0){
 
-        chequearHabilitadoPorDisponibilidadEnVacantes(establecimiento.CUE, establecimiento.Nivel,`vacante${index}`)
+        chequearHabilitadoPorDisponibilidadEnVacantes(establecimiento.CUE,`localidad${index}`, establecimiento.Nivel,`vacante${index}`)
 
 $('#establecimientosTable > tbody:last-child').append(`
         <tr>
         <td>${establecimiento.CUE}</td>
         <td>${establecimiento.Nombre}</td>
+        <td id="localidad${index}"></td>
         <td>${getNivelFormateado(establecimiento.Nivel)}</td>
         <td id="vacante${index}" style="text-align:center"></td>
         </tr>`);
@@ -40,7 +41,7 @@ function getNivelFormateado(nivelReferencia){
 
 }
 
-function chequearHabilitadoPorDisponibilidadEnVacantes(cueanexo, nivelReferencia,referenciaElemTabla){
+function chequearHabilitadoPorDisponibilidadEnVacantes(cueanexo,referenciaLocalidadTabla, nivelReferencia,referenciaElemTabla){
 
     let nivel=''
     if (nivelReferencia ==="I"){
@@ -76,9 +77,14 @@ function chequearHabilitadoPorDisponibilidadEnVacantes(cueanexo, nivelReferencia
             habilitado = xmlDoc.getElementsByTagName("Habilitado");    
             valorHabilitado = habilitado[0].childNodes[0].nodeValue
             $(`#${referenciaElemTabla}`).text( +valorHabilitado==1?'SI':'NO')
+
+            localidad = xmlDoc.getElementsByTagName("Localidaddsc");    
+            valorLocalidad = localidad[0].childNodes[0].nodeValue
+            $(`#${referenciaLocalidadTabla}`).text( valorLocalidad)
             
         }else{
             $(`#${referenciaElemTabla}`).text('-')
+            $(`#${referenciaLocalidadTabla}`).text('-')
         }
     }
   }
