@@ -519,9 +519,6 @@ function iniciarModoRadios(){
   $('#tituloModoEstablecimientos').hide()
   $('#nivelesModoEstablecimientos').hide()
 
-  if (tipoRadio==='L'){
-    $('#esPestaniaDomicilioParticular').hide()
-  }
 
   // cargamos la capa de radios
   cargarCapaRadios()
