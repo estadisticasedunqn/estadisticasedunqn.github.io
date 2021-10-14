@@ -68,7 +68,7 @@ function chequearHabilitadoPorDisponibilidadEnVacantes(cueanexo,referenciaLocali
     </soapenv:Body>
  </soapenv:Envelope>`;
  
- xmlhttp.open('POST', 'https://regular.neuquen.gob.ar/Inscripciones/servlet/com.certiregu.awsvalidaescuela'); 
+ xmlhttp.open('POST', 'https://regular.neuquen.gob.ar/InscripcionesTest/servlet/com.certiregu.awsvalidaescuela'); 
 
  xmlhttp.onreadystatechange = function () {  
     if (xmlhttp.readyState == 4) {

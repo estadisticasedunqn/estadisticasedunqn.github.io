@@ -64,6 +64,6 @@ npm i
 npm run dev
 
 3- probar la aplicacion
-localhost:3000/?modo=radios&direccion=concordia+3381&localidad=neuquen&tipoRadio=D&registranteId=26&latitud=-68.10576889318466&longitud=-38.94600331153993
+localhost:3000/?modo=radios&nivelInscripcion=1&direccion=concordia+3381&localidad=neuquen&tipoRadio=D&registranteId=26&latitud=-68.10576889318466&longitud=-38.94600331153993
 
 

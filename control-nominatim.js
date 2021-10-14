@@ -8,6 +8,7 @@
   var puntoUbicacion=null
   var registranteId = null
   var tipoRadio = null  // D | L (Domicilio,Laboral)
+  var nivelInscripcion = null
 
   //***** FIN VARIABLES GLOBALES*/
     
@@ -113,7 +114,9 @@ function cargarCapaRadios(){
     return style;
   }
 
- //a- cargamos la capa de los radios de inicial
+ //a- cargamos la capa de los radios de inicial solo si el nivel de inscripcion es 1
+
+ if(+nivelInscripcion===1){
   var vectorLayer = new ol.layer.Vector({
     source: new ol.source.Vector({    
       /*url:'https://estadisticasedunqn.com.ar:3000/radios/geoserver/radios/inicial',
@@ -129,26 +132,32 @@ function cargarCapaRadios(){
   });
   
   map.addLayer(vectorLayer); 
+ }
+ 
+ //b- cargamos la capa de los radios de Primaria solo si el nivel de inscripcion es 2
+ if(+nivelInscripcion===2){
 
-  //b- cargamos la capa de los radios de Primaria
-  var vectorLayer = new ol.layer.Vector({
-    source: new ol.source.Vector({    
-   /*   url:'https://estadisticasedunqn.com.ar:3000/radios/geoserver/radios/primaria',
-      serverType: 'geoserver',
-      crossOrigin: 'anonymous', */
-      // If you want to use a static file, change the previous row to
-      url: 'radios/primaria.json',
-      format: new ol.format.GeoJSON()
-    }),
-    style: styleRadios ,
-    declutter: true,
-    renderBuffer: 1  // If left at default value labels will appear when countries not visible
-  });
+var vectorLayer = new ol.layer.Vector({
+  source: new ol.source.Vector({    
+ /*   url:'https://estadisticasedunqn.com.ar:3000/radios/geoserver/radios/primaria',
+    serverType: 'geoserver',
+    crossOrigin: 'anonymous', */
+    // If you want to use a static file, change the previous row to
+    url: 'radios/primaria.json',
+    format: new ol.format.GeoJSON()
+  }),
+  style: styleRadios ,
+  declutter: true,
+  renderBuffer: 1  // If left at default value labels will appear when countries not visible
+});
+
+map.addLayer(vectorLayer); 
+ }
+
   
-  map.addLayer(vectorLayer); 
 
-  //c- cargamos la capa de los radios de Secundarios solo si estamos trabajando con domicilio particular  
-  if (tipoRadio=='D'){
+  //c- cargamos la capa de los radios de Secundarios solo si estamos trabajando con domicilio particular  y el nivel de inscripcion es 3
+  if (tipoRadio=='D' && +nivelInscripcion ===3){
 
 var vectorLayer = new ol.layer.Vector({
   source: new ol.source.Vector({    
@@ -239,6 +248,8 @@ function marcarDireccionInicial(){
   var localidadReferencia = getUrlParameter('localidad');
   var departamentoReferencia = getUrlParameter('departamento');
   var direccionReferencia = getUrlParameter('direccion');
+
+ 
   
   registranteId = getUrlParameter('registranteId');
   var longitud = getUrlParameter('longitud');
@@ -413,7 +424,7 @@ $('#confirmarUbicacionMensaje').hide()
 $('#confirmarUbicacionMensajeError').hide()       
 $('#confirmacionUbicacion').addClass( "is-loading" )
 
-xmlhttp.open('POST', 'https://regular.neuquen.gob.ar/Inscripciones/servlet/com.certiregu.awsradiosalumnos'); 
+xmlhttp.open('POST', 'https://regular.neuquen.gob.ar/InscripcionesTest/servlet/com.certiregu.awsradiosalumnos'); 
 
 
 
@@ -441,6 +452,9 @@ function iniciarApp(){
 
   // obtenemos el tipo de radio para setear las leyendas iniciales
   tipoRadio = getUrlParameter('tipoRadio');  // D -> 'Domicilio' -- L -> 'Laboral'
+
+  // obtenemos el nivel de inscripcion
+  nivelInscripcion = getUrlParameter('nivelInscripcion');
 
   // obtenemos el modo de visualizacion  
   if(getUrlParameter('modo')=='establecimientos'){
