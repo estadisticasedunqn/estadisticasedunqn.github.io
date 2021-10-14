@@ -18,12 +18,13 @@ Se carga la capa de radios escolares en el mapa, y de acuerdo al punto de locali
 se obtienen los radios escolares que pertenezcan a dicho punto. Dicho modo interacciona con el web service provisto por 
 la app de inscripcion online. Modo de funcionamiento
 
-https://estadisticasedunqn.github.io/?modo=radios&direccion=concordia+3381&localidad=neuquen&tipoRadio=D&registranteId=26&latitud=-68.10576889318466&longitud=-38.94600331153993&departamento=CONFLUENCIA
+https://estadisticasedunqn.github.io/?modo=radios&nivelInscripcion=1&direccion=concordia+3381&localidad=neuquen&tipoRadio=D&registranteId=26&latitud=-68.10576889318466&longitud=-38.94600331153993&departamento=CONFLUENCIA
 
 
 
 modo = radios | establecimientos
 tipoRadio= D | L (Domicilio,Laboral)
+nivelInscripcion = 1(Inicial) | 2(Primario) | 3(medio)
 
 #### Observacion de Ubicacion inicial en el mapa
 En caso de contar con los parametros latitud y longitud se utilizarán los mismos para marcar el punto en el mapa. Si no se utilizaran los campos direccion y localidad.
@@ -64,6 +65,6 @@ npm i
 npm run dev
 
 3- probar la aplicacion
-localhost:3000/?modo=radios&nivelInscripcion=1&direccion=concordia+3381&localidad=neuquen&tipoRadio=D&registranteId=26&latitud=-68.10576889318466&longitud=-38.94600331153993
+localhost:3000/?modo=radios&nivelInscripcion=1&direccion=concordia+3381&localidad=neuquen&tipoRadio=D&registranteId=31987&latitud=-68.10576889318466&longitud=-38.94600331153993
 
 
