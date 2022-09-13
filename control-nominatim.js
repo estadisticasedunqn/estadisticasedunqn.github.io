@@ -50,7 +50,7 @@
     wrapX: false,
     source: new ol.source.XYZ({
       url: 'https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}',
-      attributions: 'Datos del mapa &copy; 2020 <img src="https://lh3.googleusercontent.com/PoTrayfCHVcgWMLP9wryR37V2VUjVX8AQZEnGChDGu5MMHQLH2w_Fs4MlT4SsEF-Hq4Qca-J7yIpr3Q-u1mkOtnn1VoeKV7IL2ae=h128" width=10px > <a href="http://www.google.com/">Google Satellite</a> <a href="https://www.google.com/intl/es-419_ar/help/terms_maps">Terminos de Uso</a>',
+      attributions: 'Datos del mapa &copy; 2022 <img src="https://lh3.googleusercontent.com/PoTrayfCHVcgWMLP9wryR37V2VUjVX8AQZEnGChDGu5MMHQLH2w_Fs4MlT4SsEF-Hq4Qca-J7yIpr3Q-u1mkOtnn1VoeKV7IL2ae=h128" width=10px > <a href="http://www.google.com/">Google Satellite</a> <a href="https://www.google.com/intl/es-419_ar/help/terms_maps">Terminos de Uso</a>',
       crossOrigin: "Anonymous",
     }),
   }),
@@ -315,7 +315,7 @@ function indicarPuntoInicialPorDireccion(localidadReferencia,departamentoReferen
   const urlQuery = new URL("https://dev.virtualearth.net/REST/v1/Locations");
   urlQuery.searchParams.append("countryRegion", "Argentina");
   urlQuery.searchParams.append("adminDistrict", "Neuquen");
-  urlQuery.searchParams.append("locality", departamentoReferencia);
+  urlQuery.searchParams.append("adminDistrict2", departamentoReferencia);
   urlQuery.searchParams.append("addressLine", `${direccionReferencia} ${localidadReferencia} ${departamentoReferencia}` );
   urlQuery.searchParams.append("Key", "AuB_TgCn4vLZq_rFH8btGAYIZiigOwKplCqBqSuG7Shjew1oUPzyeoENK_oEsaKf");
   urlQuery.searchParams.append("includeNeighborhood", 0);
@@ -332,7 +332,7 @@ function indicarPuntoInicialPorDireccion(localidadReferencia,departamentoReferen
       localizacionRetorno = json.resourceSets[0]      
     
       if(localizacionRetorno.resources[0].address.adminDistrict.includes('Neuqu')
-      && quitarAcentos(localizacionRetorno.resources[0].address.locality.toLowerCase()) == departamentoReferencia.toLowerCase()
+      && quitarAcentos(localizacionRetorno.resources[0].address.adminDistrict2.toLowerCase()) == departamentoReferencia.toLowerCase()
       && localizacionRetorno.resources[0].entityType !== "Neighborhood"
       ){
         coordenadasRetorno = localizacionRetorno.resources[0].point.coordinates
