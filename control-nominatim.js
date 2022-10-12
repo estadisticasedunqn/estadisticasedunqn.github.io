@@ -389,6 +389,7 @@ function marcarPunto(point,coordenadas){
 
 function  confirmarUbicacion(){
   if(coordenadasUbicacion!==null){
+    debugger
     let features = getFeature(map.getPixelFromCoordinate(puntoUbicacion))
     if (features){      
     let informacionRetorno= generarInformacionRadiosParaRetorno(coordenadasUbicacion[0],coordenadasUbicacion[1],tipoRadio,features)

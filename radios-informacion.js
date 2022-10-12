@@ -1,11 +1,11 @@
 function generarInformacionEstablecimentos(tipoRadio,radios){
     informacionRadios=[]
     radios.forEach(radio=>{
-        
+       debugger 
         let nivel=getNivel(radio.id_.toLowerCase())
-        let nombre = getNombre(radio.get('RADIO'))
+        let nombre = getNombre(radio.get('RADIO') || radio.get('radio'))
         let radioElem = {
-            "CUE":radio.get('CUEANEXO'),
+            "CUE":radio.get('CUEANEXO') || radio.get('cueanexo'),
             "Nombre":nombre,
             "Nivel":nivel,
             "TipoRadio":tipoRadio,
@@ -48,7 +48,7 @@ function getNivel(nivelReferencia){
     if (nivelReferencia.includes("pri")){
         nivel = "P"
     }
-    if (nivelReferencia.includes("sec")){
+    if (nivelReferencia.includes("ori")){
         nivel = "S"
     }
     if (nivelReferencia.includes("tec")){
