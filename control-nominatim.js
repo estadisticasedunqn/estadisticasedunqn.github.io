@@ -331,8 +331,8 @@ function indicarPuntoInicialPorDireccion(localidadReferencia,departamentoReferen
     if(json.statusCode==200 && json.resourceSets.length==1 ){
       localizacionRetorno = json.resourceSets[0]      
     
-      if(localizacionRetorno.resources[0].address.adminDistrict.includes('Neuqu')
-      && quitarAcentos(localizacionRetorno.resources[0].address.adminDistrict2.toLowerCase()) == departamentoReferencia.toLowerCase()
+      if(localizacionRetorno.resources[0].address.adminDistrict.includes('Neuqu')      
+      && quitarAcentos(localizacionRetorno.resources[0].address.adminDistrict2?.toLowerCase()).includes(departamentoReferencia.toLowerCase())
       && localizacionRetorno.resources[0].entityType !== "Neighborhood"
       ){
         coordenadasRetorno = localizacionRetorno.resources[0].point.coordinates
