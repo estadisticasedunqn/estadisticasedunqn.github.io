@@ -1,3 +1,4 @@
+
 function clearEstablecimientosTabla(){
     $("#establecimientosTable > tbody").empty();
 }
@@ -68,7 +69,7 @@ function chequearHabilitadoPorDisponibilidadEnVacantes(cueanexo,referenciaLocali
     </soapenv:Body>
  </soapenv:Envelope>`;
  
- xmlhttp.open('POST', 'https://regular.neuquen.gob.ar/InscripcionesTest/servlet/com.certiregu.awsvalidaescuela'); 
+  xmlhttp.open('POST', `${URL_API}/com.certiregu.awsvalidaescuela`   ); 
 
  xmlhttp.onreadystatechange = function () {  
     if (xmlhttp.readyState == 4) {

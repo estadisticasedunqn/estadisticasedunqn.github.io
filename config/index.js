@@ -1,0 +1,1 @@
+const URL_API = 'https://regular.neuquen.gob.ar/InscripcionesTest/servlet'

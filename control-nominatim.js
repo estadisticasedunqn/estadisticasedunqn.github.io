@@ -1,3 +1,4 @@
+
 (function(win, doc) {
 
   //***** VARIABLES GLOBALES*/
@@ -332,7 +333,7 @@ function indicarPuntoInicialPorDireccion(localidadReferencia,departamentoReferen
       localizacionRetorno = json.resourceSets[0]      
     
       if(localizacionRetorno.resources[0].address.adminDistrict.includes('Neuqu')
-      && quitarAcentos(localizacionRetorno.resources[0].address.adminDistrict2?.toLowerCase()).includes(departamentoReferencia.toLowerCase())
+      && quitarAcentos(localizacionRetorno.resources[0].address.adminDistrict2.toLowerCase()).includes(departamentoReferencia.toLowerCase())
       && localizacionRetorno.resources[0].entityType !== "Neighborhood"
       ){
         coordenadasRetorno = localizacionRetorno.resources[0].point.coordinates
@@ -425,7 +426,7 @@ $('#confirmarUbicacionMensaje').hide()
 $('#confirmarUbicacionMensajeError').hide()       
 $('#confirmacionUbicacion').addClass( "is-loading" )
 
-xmlhttp.open('POST', 'https://regular.neuquen.gob.ar/InscripcionesTest/servlet/com.certiregu.awsradiosalumnos'); 
+xmlhttp.open('POST', `${URL_API}/com.certiregu.awsradiosalumnos`   ); 
 
 
 
