@@ -2,17 +2,10 @@
 
 ## ws capa de Radios
 
-http://geoeducacion.neuquen.gov.ar/geoserver/radios_escolares_db/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=radios_escolares_db%3ASI_Inicial&outputFormat=application%2Fjson&srsname=EPSG:3857&
-
-http://geoeducacion.neuquen.gov.ar/geoserver/radios_escolares_db/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=radios_escolares_db%3ASI_Primaria&outputFormat=application%2Fjson&srsname=EPSG:3857&
-
-
-
-http://geoeducacion.neuquen.gov.ar/geoserver/radios_escolares_db/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=radios_escolares_db%3ASI_Secundaria_Orientada&outputFormat=application%2Fjson&srsname=EPSG:3857&
-
-
-
-http://geoeducacion.neuquen.gov.ar/geoserver/radios_escolares_db/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=radios_escolares_db%3ASI_Secundaria_Tecnica&outputFormat=application%2Fjson&srsname=EPSG:3857&
+http://geoeducacion.neuquen.gov.ar/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=radios_escolares_db:SI_Inicial&outputFormat=application/json&srsname=EPSG:3857&
+http://geoeducacion.neuquen.gov.ar/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=radios_escolares_db:SI_Primaria&outputFormat=application/json&srsname=EPSG:3857&
+http://geoeducacion.neuquen.gov.ar/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=radios_escolares_db:SI_Secundaria_Orientada&outputFormat=application/json&srsname=EPSG:3857&
+http://geoeducacion.neuquen.gov.ar/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=radios_escolares_db:SI_Secundaria_Tecnica&outputFormat=application/json&srsname=EPSG:3857&
 
 ## Utilizacion de la app 
 ### La app tienen dos modos de funcionamiento:
